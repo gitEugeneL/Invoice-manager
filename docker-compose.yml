@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  
+  identity.api.database:
+    image: postgres:latest
+  
+  identity.api:
+    build:
+      context: ./Services/Identity/Identity.Api
+      dockerfile: Dockerfile
