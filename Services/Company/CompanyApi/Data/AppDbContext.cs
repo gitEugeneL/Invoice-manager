@@ -11,8 +11,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         var company = builder.Entity<Company>();
         company
-            .HasIndex(c => c.TaxNumber)
-            .IsUnique();
+            .Property(c => c.Name)
+            .HasMaxLength(100);
+        company
+            .Property(c => c.TaxNumber)
+            .HasMaxLength(10);
+        company
+            .Property(c => c.City)
+            .HasMaxLength(50);
+        company
+            .Property(c => c.Street)
+            .HasMaxLength(50);
+        company
+            .Property(c => c.HouseNumber)
+            .HasMaxLength(10);
         company
             .Property(c => c.PostalCode)
             .HasMaxLength(10);
