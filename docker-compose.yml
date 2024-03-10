@@ -9,3 +9,11 @@ services:
     build:
       context: ./Services/Identity/Identity.Api
       dockerfile: Dockerfile
+      
+  company.api.database:
+    image: postgres:latest
+    
+  company.api:
+    build:
+      context: ./Services/Company/CompanyApi
+      dockerfile: Dockerfile

@@ -26,8 +26,8 @@ builder.Services
 
 /*** Database connection ***/
 builder.Services.AddDbContext<AppDbContext>(options =>
-    // options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
-    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
+    // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
 /*** Swagger configuration ***/
 builder.Services.AddSwaggerGen(c =>
@@ -66,6 +66,14 @@ builder.Services.AddAuthorizationBuilder()
             .RequireClaim(ClaimTypes.NameIdentifier));
 
 var app = builder.Build();
+
+/*** Update develop database ***/
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetService<AppDbContext>()!;
+    context.Database.EnsureCreated();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

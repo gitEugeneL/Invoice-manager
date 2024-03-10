@@ -24,8 +24,8 @@ builder.Services
 
 /*** Database connection ***/
 builder.Services.AddDbContext<AppDbContext>(options =>
-    // options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
-    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
+    // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
 var app = builder.Build();
 

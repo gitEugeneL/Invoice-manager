@@ -27,5 +27,35 @@ services:
     depends_on:
       - identity.api.database
 
+#---------------------------------------------------------------------------
+  
+  company.api.database:
+    container_name: company.api.database
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - company.api.database:/var/lib/postgresql/data:rw
+
+  company.api:
+    container_name: company.api
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+      - "ConnectionStrings__PSQL=Host=company.api.database;Port=5432;Database=app;Username=user;Password=password;"
+    ports:
+      - "8001:8080"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    depends_on:
+      - company.api.database
+
+#---------------------------------------------------------------------------
+
 volumes:
   identity.api.database:
+  company.api.database:
