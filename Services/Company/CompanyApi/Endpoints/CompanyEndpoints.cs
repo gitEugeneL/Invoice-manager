@@ -18,9 +18,9 @@ public static class CompanyEndpoints
         group.MapPost("", CreateCompany)
             .WithValidator<CreateCompanyDto>()
             .Produces<CompanyResponseDto>(StatusCodes.Status201Created);
-
+        
         group.MapPut("", UpdateCompany)
-            .WithValidator<CreateCompanyDto>()
+            .WithValidator<UpdateCompanyDto>()
             .Produces<CompanyResponseDto>()
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status403Forbidden);
@@ -28,15 +28,14 @@ public static class CompanyEndpoints
         group.MapGet("{companyId:guid}", GetCompanyById)
             .Produces<CompanyResponseDto>()
             .Produces(StatusCodes.Status404NotFound);
-
+        
         group.MapGet("", GetAllCompanies)
             .Produces<PaginatedResponse<CompanyResponseDto>>();
-
+        
         group.MapDelete("{companyId:guid}", DeleteCompanyById)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound);
     }
-
     private static async Task<IResult> CreateCompany(
         [FromBody] CreateCompanyDto dto,
         HttpContext httpContext,
@@ -72,7 +71,7 @@ public static class CompanyEndpoints
         
         if (company.CreatedByUserId != userId)
             return TypedResults.Forbid();
-
+    
         company.Name = dto.Name ?? company.Name;
         company.TaxNumber = dto.TaxNumber ?? company.TaxNumber;
         company.City = dto.City ?? company.City;
@@ -80,11 +79,11 @@ public static class CompanyEndpoints
         company.HouseNumber = dto.HouseNumber ?? company.HouseNumber;
         company.PostalCode = dto.PostalCode ?? company.PostalCode;
         await repository.UpdateCompany(company);
-
+    
         return TypedResults
             .Ok(new CompanyResponseDto(company));
     }
-
+    
     private static async Task<Results<Ok<CompanyResponseDto>, NotFound<string>>> GetCompanyById(
         Guid companyId,
         HttpContext httpContext,
@@ -95,11 +94,11 @@ public static class CompanyEndpoints
         
         if (company is null || company.CreatedByUserId != userId)
             return TypedResults.NotFound($"Company: {companyId} not found");
-
+    
         return TypedResults
             .Ok(new CompanyResponseDto(company));
     }
-
+    
     private static async Task<IResult> GetAllCompanies(
         [AsParameters] QueryParameters parameters, 
         HttpContext httpContext,
@@ -108,7 +107,7 @@ public static class CompanyEndpoints
         var userId = BaseService.ReadUserIdFromToken(httpContext);
         var (companies, count) = 
             await repository.FindCompaniesByOwnerId(userId, parameters.PageNumber, parameters.PageSize);
-
+    
         return TypedResults
             .Ok(new PaginatedResponse<CompanyResponseDto>(
                 companies
@@ -118,7 +117,7 @@ public static class CompanyEndpoints
                 parameters.PageNumber,
                 parameters.PageSize));
     }
-
+    
     private static async Task<Results<NoContent, NotFound<string>>> DeleteCompanyById(
         Guid companyId,
         HttpContext httpContext,
@@ -126,10 +125,10 @@ public static class CompanyEndpoints
     {
         var userId = BaseService.ReadUserIdFromToken(httpContext);
         var company = await repository.FindCompanyById(companyId);
-
+    
         if (company is null || company.CreatedByUserId != userId)
             return TypedResults.NotFound($"Company: {companyId} not found");
-
+    
         await repository.DeleteCompany(company);
         return TypedResults.NoContent();
     }

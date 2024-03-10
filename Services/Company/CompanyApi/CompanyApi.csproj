@@ -22,4 +22,10 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="sqlite-data.db-wal" />
+      <None Remove="sqlite-data.db-shm" />
+      <None Remove="sqlite-data.db" />
+    </ItemGroup>
+
 </Project>

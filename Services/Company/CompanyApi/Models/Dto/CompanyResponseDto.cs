@@ -4,6 +4,7 @@ namespace CompanyApi.Models.Dto;
 
 public sealed class CompanyResponseDto()
 {
+    public Guid CompanyId { get; init; }
     public string Name { get; init; } = string.Empty;
     public string TaxNumber { get; init; } = string.Empty;
     public string City { get; init; } = string.Empty;
@@ -13,6 +14,7 @@ public sealed class CompanyResponseDto()
 
     public CompanyResponseDto(Company company) : this()
     {
+        CompanyId = company.Id;
         Name = company.Name;
         TaxNumber = company.TaxNumber;
         City = company.City;
