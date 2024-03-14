@@ -1,7 +1,7 @@
 using FluentValidation;
 using InvoiceApi.Models.Entities.Enums;
 
-namespace InvoiceApi.Models.Dto;
+namespace InvoiceApi.Models.Dto.Invoices;
 
 public sealed record UpdateInvoiceDto(
     Guid InvoiceId,

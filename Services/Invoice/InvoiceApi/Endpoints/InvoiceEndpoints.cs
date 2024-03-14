@@ -1,4 +1,5 @@
 using InvoiceApi.Models.Dto;
+using InvoiceApi.Models.Dto.Invoices;
 using InvoiceApi.Models.Entities;
 using InvoiceApi.Models.Entities.Enums;
 using InvoiceApi.Repositories.Interfaces;

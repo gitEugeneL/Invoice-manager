@@ -3,17 +3,21 @@ using InvoiceApi.Models.Entities.Enums;
 
 namespace InvoiceApi.Models.Entities;
 
-public sealed class Item(string name, int amount, Unit unit, Vat vat, decimal netPrice)
-    : BaseEntity
+public sealed class Item : BaseEntity
 {
-    public required string Name { get; init; } = name;
-    public required int Amount { get; init; } = amount;
-    public required Unit Unit { get; init; } = unit;
-    public required Vat Vat { get; init; } = vat;
-    public required decimal NetPrice { get; init; } = netPrice;
-    public decimal GrossPrice { get; init; } = netPrice + netPrice / 100 * (decimal)vat;
-
+    public required string Name { get; set; }
+    public required int Amount { get; set; }
+    public required Unit Unit { get; init; }
+    public required Vat Vat { get; init; }
+    public required decimal NetPrice { get; set; }
+    public decimal GrossPrice { get; init; }
+    
     /** Relations **/
     public Guid InvoiceId { get; init; }
     public required Invoice Invoice { get; init; }
+
+    public Item()
+    {
+        GrossPrice = NetPrice + NetPrice / 100 * (decimal)Vat;
+    }
 }

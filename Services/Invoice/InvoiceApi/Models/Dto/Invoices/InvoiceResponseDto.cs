@@ -1,7 +1,6 @@
 using InvoiceApi.Models.Entities;
-using InvoiceApi.Models.Entities.Enums;
 
-namespace InvoiceApi.Models.Dto;
+namespace InvoiceApi.Models.Dto.Invoices;
 
 public sealed class InvoiceResponseDto()
 {
@@ -13,9 +12,8 @@ public sealed class InvoiceResponseDto()
     public int TermsOfPayment { get; init; }
     public string PaymentType { get; init; } = string.Empty;
     public string Status { get; init; } = string.Empty;
+    public List<Guid> ItemsId { get; init; } = []; 
     
-    // todo add Items list
-
     public InvoiceResponseDto(Invoice invoice) : this()
     {
         SellerCompanyId = invoice.SellerCompanyId;
@@ -26,5 +24,6 @@ public sealed class InvoiceResponseDto()
         TermsOfPayment = invoice.TermsOfPayment;
         PaymentType = invoice.PaymentType.ToString();
         Status = invoice.Status.ToString();
+        ItemsId = invoice.Items.Select(i => i.Id).ToList();
     }
 }

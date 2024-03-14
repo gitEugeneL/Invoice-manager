@@ -18,12 +18,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
+    .AddScoped<IItemRepository, ItemRepository>()
     .AddScoped<IInvoiceRepository, InvoiceRepository>();
 
 /*** FluentValidation files register ***/
 builder.Services
     .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
 
 /*** Database connection ***/
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -72,6 +72,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapInvoiceEndpoints();
+app.MapItemEndpoints();
 
 app.UseHttpsRedirection();
 
