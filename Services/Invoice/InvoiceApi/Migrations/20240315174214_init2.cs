@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InvoiceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class init2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,14 +16,16 @@ namespace InvoiceApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    SellerId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    BuyerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SellerCompanyId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BuyerCompanyId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Number = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    TotalGrossPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalNetPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalGrossPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TermsOfPayment = table.Column<int>(type: "INTEGER", nullable: false),
                     PaymentType = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
+                    Locked = table.Column<bool>(type: "INTEGER", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Updated = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },

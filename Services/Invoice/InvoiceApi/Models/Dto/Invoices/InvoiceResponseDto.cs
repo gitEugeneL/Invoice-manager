@@ -4,6 +4,7 @@ namespace InvoiceApi.Models.Dto.Invoices;
 
 public sealed class InvoiceResponseDto()
 {
+    public Guid InvoiceId { get; init; }
     public Guid SellerCompanyId { get; init; }
     public Guid BuyerCompanyId { get; init; }
     public string Number { get; init; } = string.Empty;
@@ -16,6 +17,7 @@ public sealed class InvoiceResponseDto()
     
     public InvoiceResponseDto(Invoice invoice) : this()
     {
+        InvoiceId = invoice.Id;
         SellerCompanyId = invoice.SellerCompanyId;
         BuyerCompanyId = invoice.BuyerCompanyId;
         Number = invoice.Number;

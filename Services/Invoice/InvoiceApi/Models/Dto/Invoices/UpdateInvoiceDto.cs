@@ -5,7 +5,7 @@ namespace InvoiceApi.Models.Dto.Invoices;
 
 public sealed record UpdateInvoiceDto(
     Guid InvoiceId,
-    Status Status
+    string Status
 );
 
 public sealed class UpdateInvoiceValidator : AbstractValidator<UpdateInvoiceDto>

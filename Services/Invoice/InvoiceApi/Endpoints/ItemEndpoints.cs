@@ -31,9 +31,6 @@ public static class ItemEndpoints
         group.MapDelete("{itemId:guid}", DeleteItem)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent);
-
-
-        // todo close invoice and check 
     }
     
     private static async Task<Results<Ok<ItemResponseDto>, NotFound<string>>> CreateItem(
@@ -44,14 +41,14 @@ public static class ItemEndpoints
     {
         var userId = BaseService.ReadUserIdFromToken(httpContext);
         var invoice = await invoiceRepository.FindInvoiceById(dto.InvoiceId);
-        if (invoice is null || invoice.OwnerId != userId)
+        if (invoice is null || invoice.OwnerId != userId || invoice.Locked)
             return TypedResults.NotFound($"Invoice: {invoice} not found or you don't have access");
         
         var item = await itemRepository.CreateItem(
             new Item 
             {
                 Name = dto.Name,
-                Amount =dto.Amount,
+                Amount = dto.Amount,
                 Unit = Enum.Parse<Unit>(dto.Unit),
                 Vat = Enum.Parse<Vat>(dto.Vat),
                 NetPrice = dto.NetPrice,
@@ -94,7 +91,7 @@ public static class ItemEndpoints
     {
         var userId = BaseService.ReadUserIdFromToken(httpContext);
         var item = await repository.FindItemById(dto.ItemId);
-        if (item is null || item.Invoice.OwnerId != userId)
+        if (item is null || item.Invoice.OwnerId != userId || item.Invoice.Locked)
             TypedResults.NotFound($"Item: {dto.ItemId} not found or you don't have access");
 
         item.Name = dto.Name ?? item.Name;
@@ -112,7 +109,7 @@ public static class ItemEndpoints
     {
         var userId = BaseService.ReadUserIdFromToken(httpContext);
         var item = await repository.FindItemById(itemId);
-        if (item is null || item.Invoice.OwnerId != userId)
+        if (item is null || item.Invoice.OwnerId != userId || item.Invoice.Locked)
             return TypedResults.NotFound($"Item: {itemId} not found or you don't have access");
 
         await repository.DeleteItem(item);

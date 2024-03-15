@@ -29,6 +29,9 @@ namespace InvoiceApi.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Locked")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Number")
                         .IsRequired()
                         .HasMaxLength(150)

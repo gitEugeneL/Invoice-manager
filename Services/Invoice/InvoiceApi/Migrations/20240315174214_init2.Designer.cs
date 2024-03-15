@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240311182608_init")]
-    partial class init
+    [Migration("20240315174214_init2")]
+    partial class init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,22 +26,28 @@ namespace InvoiceApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("BuyerId")
+                    b.Property<Guid>("BuyerCompanyId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("Locked")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Number")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PaymentType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("SellerId")
+                    b.Property<Guid>("SellerCompanyId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")

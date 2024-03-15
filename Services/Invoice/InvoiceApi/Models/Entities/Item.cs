@@ -10,14 +10,13 @@ public sealed class Item : BaseEntity
     public required Unit Unit { get; init; }
     public required Vat Vat { get; init; }
     public required decimal NetPrice { get; set; }
-    public decimal GrossPrice { get; init; }
-    
+    public decimal GrossPrice
+    {
+        get => NetPrice + NetPrice / 100 * (decimal)Vat;
+        set { }
+    }
+
     /** Relations **/
     public Guid InvoiceId { get; init; }
     public required Invoice Invoice { get; init; }
-
-    public Item()
-    {
-        GrossPrice = NetPrice + NetPrice / 100 * (decimal)Vat;
-    }
 }
