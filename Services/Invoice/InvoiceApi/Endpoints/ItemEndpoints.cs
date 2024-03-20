@@ -21,10 +21,15 @@ public static class ItemEndpoints
             .Produces<ItemResponseDto>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status404NotFound);
 
+        group.MapPut("", UpdateItem)
+            .WithValidator<UpdateItemDto>()
+            .Produces<ItemResponseDto>()
+            .Produces(StatusCodes.Status404NotFound);
+        
         group.MapGet("{itemId:guid}", GetItemById)
             .Produces(StatusCodes.Status404NotFound)
             .Produces<ItemResponseDto>();
-
+        
         group.MapGet("all-by-invoice/{invoiceId:guid}", GetItemsByInvoiceId)
             .Produces<List<ItemResponseDto>>();
 
@@ -33,7 +38,7 @@ public static class ItemEndpoints
             .Produces(StatusCodes.Status204NoContent);
     }
     
-    private static async Task<Results<Ok<ItemResponseDto>, NotFound<string>>> CreateItem(
+    private static async Task<Results<Created<ItemResponseDto>, NotFound<string>>> CreateItem(
         [FromBody] CreateItemDto dto,
         HttpContext httpContext,
         IInvoiceRepository invoiceRepository,
@@ -55,7 +60,7 @@ public static class ItemEndpoints
                 Invoice = invoice
             }
         );
-        return TypedResults.Ok(new ItemResponseDto(item));
+        return TypedResults.Created(item.Id.ToString(), new ItemResponseDto(item));
     }
 
     private static async Task<Results<Ok<ItemResponseDto>, NotFound<string>>> GetItemById(
@@ -92,7 +97,7 @@ public static class ItemEndpoints
         var userId = BaseService.ReadUserIdFromToken(httpContext);
         var item = await repository.FindItemById(dto.ItemId);
         if (item is null || item.Invoice.OwnerId != userId || item.Invoice.Locked)
-            TypedResults.NotFound($"Item: {dto.ItemId} not found or you don't have access");
+            return TypedResults.NotFound($"Item: {dto.ItemId} not found or you don't have access");
 
         item.Name = dto.Name ?? item.Name;
         item.Amount = dto.Amount ?? item.Amount;

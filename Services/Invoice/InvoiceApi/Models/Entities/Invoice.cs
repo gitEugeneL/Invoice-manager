@@ -15,7 +15,7 @@ public sealed class Invoice : BaseAuditableEntity
     public bool Locked { get; set; }
     public decimal TotalNetPrice
     {
-        get => Items.Sum(i => i.NetPrice);
+        get => Items.Sum(i => i.SumNetPrice);
         set { }
     }
     public decimal TotalGrossPrice

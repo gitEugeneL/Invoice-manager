@@ -91,6 +91,9 @@ namespace InvoiceApi.Migrations
                     b.Property<decimal>("NetPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("SumNetPrice")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("TEXT");

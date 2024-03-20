@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240315174214_init2")]
-    partial class init2
+    [Migration("20240320174624_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,6 +93,9 @@ namespace InvoiceApi.Migrations
 
                     b.Property<decimal>("NetPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SumNetPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Unit")
                         .IsRequired()

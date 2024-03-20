@@ -10,9 +10,16 @@ public sealed class Item : BaseEntity
     public required Unit Unit { get; init; }
     public required Vat Vat { get; init; }
     public required decimal NetPrice { get; set; }
+
+    public decimal SumNetPrice
+    {
+        get => NetPrice * Amount;
+        set { }
+    }
+    
     public decimal GrossPrice
     {
-        get => NetPrice + NetPrice / 100 * (decimal)Vat;
+        get => SumNetPrice + SumNetPrice / 100 * (decimal)Vat;
         set { }
     }
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InvoiceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class init2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,12 +20,12 @@ namespace InvoiceApi.Migrations
                     SellerCompanyId = table.Column<Guid>(type: "TEXT", nullable: false),
                     BuyerCompanyId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Number = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    TotalNetPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalGrossPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TermsOfPayment = table.Column<int>(type: "INTEGER", nullable: false),
                     PaymentType = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
                     Locked = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TotalNetPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalGrossPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Updated = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
@@ -44,6 +44,7 @@ namespace InvoiceApi.Migrations
                     Unit = table.Column<string>(type: "TEXT", nullable: false),
                     Vat = table.Column<string>(type: "TEXT", nullable: false),
                     NetPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SumNetPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     GrossPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     InvoiceId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },

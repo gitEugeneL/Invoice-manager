@@ -10,14 +10,6 @@ namespace InvoiceApi.IntegrationTests.Endpoints;
 public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = TestCase.CreateTestHttpClient(factory, "invoiceEndpoints");
-
-    private async Task<InvoiceResponseDto> CreateInvoice()
-    {
-        var model = new CreateInvoiceDto(
-            Guid.NewGuid(), Guid.NewGuid(), 3, "Cash", "Unpaid");
-        var response = await _client.PostAsync("api/v1/invoice", TestCase.CreateContext(model));
-        return await TestCase.DeserializeResponse<InvoiceResponseDto>(response);
-    }
     
     [Theory]
     [InlineData(7, "Blik", "Unpaid")]
@@ -50,7 +42,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "email@test.com"));
-        var createResult = await CreateInvoice();
+        var createResult = await TestCase.CreateInvoice(_client);
         var updateModel = new UpdateInvoiceDto(createResult.InvoiceId, "Paid");
         
         // act
@@ -82,7 +74,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user1@test.com"));
-        var createResult = await CreateInvoice();
+        var createResult = await TestCase.CreateInvoice(_client);
         var updateModel = new UpdateInvoiceDto(createResult.InvoiceId, "Paid");
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user2@test.com"));
 
@@ -101,7 +93,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "email@test.com"));
         for (var i = 0; i < count; i++)
-            await CreateInvoice();
+            await TestCase.CreateInvoice(_client);
         
         var queryParams = $"?pageNumber={pageNumber}&pageSize={pageSize}";
 
@@ -121,7 +113,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "email@test.com"));
-        var createResult = await CreateInvoice();
+        var createResult = await TestCase.CreateInvoice(_client);
 
         // act
         var response = await _client.DeleteAsync($"api/v1/invoice/{createResult.InvoiceId}");
@@ -148,7 +140,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user1@test.com"));
-        var createResult = await CreateInvoice();
+        var createResult = await TestCase.CreateInvoice(_client);
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user2@test.com"));
         
         // act
@@ -163,7 +155,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "email@test.com"));
-        var createResult = await CreateInvoice();
+        var createResult = await TestCase.CreateInvoice(_client);
         
         // act
         var response = await _client.PatchAsync($"api/v1/invoice/lock/{createResult.InvoiceId}", null);
@@ -192,7 +184,7 @@ public class InvoiceEndpointsTests(WebApplicationFactory<Program> factory) : ICl
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user1@test.com"));
-        var createResult = await CreateInvoice();
+        var createResult = await TestCase.CreateInvoice(_client);
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user2@test.com"));
         
         // act
