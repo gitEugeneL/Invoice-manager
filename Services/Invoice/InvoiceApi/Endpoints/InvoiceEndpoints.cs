@@ -110,7 +110,7 @@ public static class InvoiceEndpoints
                 parameters.PageSize));
     }
 
-    private static async Task<Results<Ok, NotFound<string>>> LockInvoice(
+    private static async Task<Results<Ok<Guid>, NotFound<string>>> LockInvoice(
         Guid invoiceId,
         HttpContext httpContext,
         IInvoiceRepository repository)
@@ -122,6 +122,6 @@ public static class InvoiceEndpoints
 
         invoice.Locked = true;
         await repository.UpdateInvoice(invoice);
-        return TypedResults.Ok();
+        return TypedResults.Ok(invoice.Id);
     }
 }

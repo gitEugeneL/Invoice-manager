@@ -77,3 +77,5 @@ app.MapItemEndpoints();
 app.UseHttpsRedirection();
 
 app.Run();
+
+public abstract partial class Program { } // for tests
