@@ -53,9 +53,40 @@ services:
         max_attempts: 3
     depends_on:
       - company.api.database
+      - identity.api
+
+#---------------------------------------------------------------------------
+
+  invoice.api.database:
+    container_name: invoice.api.database
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - invoice.api.database:/var/lib/postgresql/data:rw
+
+  invoice.api:
+    container_name: invoice.api
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+      - "ConnectionStrings__PSQL=Host=company.api.database;Port=5432;Database=app;Username=user;Password=password;"
+    ports:
+      - "8002:8080"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    depends_on:
+      - invoice.api.database
+      - identity.api
+      - company.api
 
 #---------------------------------------------------------------------------
 
 volumes:
+  invoice.api.database:
   identity.api.database:
   company.api.database:

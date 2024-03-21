@@ -10,6 +10,8 @@ services:
       context: ./Services/Identity/Identity.Api
       dockerfile: Dockerfile
       
+  # -------------------------------------------------
+      
   company.api.database:
     image: postgres:latest
     
@@ -17,3 +19,15 @@ services:
     build:
       context: ./Services/Company/CompanyApi
       dockerfile: Dockerfile
+      
+  # -------------------------------------------------
+    
+  invoice.api.database:
+    image: postgres:latest
+    
+  invoice.api:
+    build:
+      context: ./Services/Invoice/InvoiceApi
+      dockerfile: Dockerfile
+      
+  # -------------------------------------------------    
