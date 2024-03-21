@@ -29,7 +29,11 @@ public static class InvoiceEndpoints
             group.MapDelete("{invoiceId:guid}", DeleteInvoice)
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status404NotFound);
-            
+
+            group.MapGet("{invoiceId:guid}", GetInvoiceById)
+                .Produces<InvoiceResponseDto>()
+                .Produces(StatusCodes.Status404NotFound);
+        
             group.MapGet("", GetAllInvoices)
                 .Produces<PaginatedResponse<InvoiceResponseDto>>();
 
@@ -37,7 +41,7 @@ public static class InvoiceEndpoints
                 .Produces<Guid>()
                 .Produces(StatusCodes.Status404NotFound);
     }
-
+    
     private static async Task<IResult> CreateInvoice(
         [FromBody] CreateInvoiceDto dto,
         HttpContext httpContext,
@@ -89,6 +93,19 @@ public static class InvoiceEndpoints
 
         await repository.DeleteInvoice(invoice);
         return TypedResults.NoContent();
+    }
+
+    private static async Task<Results<Ok<InvoiceResponseDto>, NotFound<string>>> GetInvoiceById(
+        Guid invoiceId,
+        HttpContext httpContext,
+        IInvoiceRepository repository)
+    {
+        var userId = BaseService.ReadUserIdFromToken(httpContext);
+        var invoice = await repository.FindInvoiceById(invoiceId);
+        if (invoice is null || invoice.OwnerId != userId)
+            return TypedResults.NotFound($"Invoice: {invoice} not found or you don't have access");
+
+        return TypedResults.Ok(new InvoiceResponseDto(invoice));
     }
 
     private static async Task<IResult> GetAllInvoices(
