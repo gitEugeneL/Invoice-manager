@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceApi", "Services\Invo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceApi.IntegrationTests", "Services\Invoice\Tests\InvoiceApi.IntegrationTests\InvoiceApi.IntegrationTests.csproj", "{C3C6EB52-1561-4AC6-8D91-E1B0C882D232}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceApi.Tests", "Services\Invoice\Tests\InvoiceApi.Tests\InvoiceApi.Tests.csproj", "{4DB0280D-A01F-4FAE-A884-D0E3818D3B8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{C3C6EB52-1561-4AC6-8D91-E1B0C882D232}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3C6EB52-1561-4AC6-8D91-E1B0C882D232}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3C6EB52-1561-4AC6-8D91-E1B0C882D232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB0280D-A01F-4FAE-A884-D0E3818D3B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB0280D-A01F-4FAE-A884-D0E3818D3B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB0280D-A01F-4FAE-A884-D0E3818D3B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB0280D-A01F-4FAE-A884-D0E3818D3B8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6C5FBB1B-5B8B-43A4-9076-380B49F7E73B} = {90C4829A-F37B-4A58-AF05-2F7BDE9AD75B}
@@ -90,5 +96,6 @@ Global
 		{4A7194AF-1139-476F-A067-9C6C310517B8} = {FF9D34A7-DDA9-43BF-8D49-C626DA845325}
 		{69B2E1A6-1129-4FE9-81A3-8294BF36FA92} = {FF9D34A7-DDA9-43BF-8D49-C626DA845325}
 		{C3C6EB52-1561-4AC6-8D91-E1B0C882D232} = {4A7194AF-1139-476F-A067-9C6C310517B8}
+		{4DB0280D-A01F-4FAE-A884-D0E3818D3B8A} = {4A7194AF-1139-476F-A067-9C6C310517B8}
 	EndGlobalSection
 EndGlobal
