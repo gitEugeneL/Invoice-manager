@@ -2,6 +2,13 @@ version: "3.8"
 
 services:
   
+  gateway.api:
+    build:
+      context: ./Gateway/GatewayApi
+      dockerfile: Dockerfile
+  
+  # -------------------------------------------------
+  
   identity.api.database:
     image: postgres:latest
   

@@ -2,6 +2,25 @@ version: "3.8"
 
 services:
   
+  gateway.api:
+    container_name: gateway.api
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+    ports:
+      - "5000:8080"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    depends_on:
+      - identity.api
+      - company.api
+      - invoice.api
+    networks:
+      - proxybackend
+    
+#---------------------------------------------------------------------------
+    
   identity.api.database:
     container_name: identity.api.database
     environment:
@@ -12,7 +31,9 @@ services:
       - "5432:5432"
     volumes: 
       - identity.api.database:/var/lib/postgresql/data:rw
-
+    networks:
+      - proxybackend
+    
   identity.api:
     container_name: identity.api 
     environment:
@@ -26,7 +47,9 @@ services:
         max_attempts: 3    
     depends_on:
       - identity.api.database
-
+    networks:
+      - proxybackend
+    
 #---------------------------------------------------------------------------
   
   company.api.database:
@@ -39,7 +62,9 @@ services:
       - "5433:5432"
     volumes:
       - company.api.database:/var/lib/postgresql/data:rw
-
+    networks:
+      - proxybackend
+    
   company.api:
     container_name: company.api
     environment:
@@ -54,7 +79,9 @@ services:
     depends_on:
       - company.api.database
       - identity.api
-
+    networks:
+      - proxybackend
+    
 #---------------------------------------------------------------------------
 
   invoice.api.database:
@@ -67,12 +94,14 @@ services:
       - "5434:5432"
     volumes:
       - invoice.api.database:/var/lib/postgresql/data:rw
-
+    networks:
+      - proxybackend
+    
   invoice.api:
     container_name: invoice.api
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
-      - "ConnectionStrings__PSQL=Host=company.api.database;Port=5432;Database=app;Username=user;Password=password;"
+      - "ConnectionStrings__PSQL=Host=invoice.api.database;Port=5432;Database=app;Username=user;Password=password;"
     ports:
       - "8002:8080"
     deploy:
@@ -83,6 +112,8 @@ services:
       - invoice.api.database
       - identity.api
       - company.api
+    networks: 
+      - proxybackend
 
 #---------------------------------------------------------------------------
 
@@ -90,3 +121,8 @@ volumes:
   invoice.api.database:
   identity.api.database:
   company.api.database:
+    
+networks:
+  proxybackend:
+    name: proxybackend
+    driver: bridge
