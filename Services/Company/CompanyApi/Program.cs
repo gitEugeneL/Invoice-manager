@@ -1,10 +1,8 @@
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using Carter;
 using CompanyApi.Data;
-using CompanyApi.Endpoints;
-using CompanyApi.Repositories;
-using CompanyApi.Repositories.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services
-    .AddScoped<ICompanyRepository, CompanyRepository>();
-
 /*** FluentValidation files register ***/
 builder.Services
     .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -28,6 +23,13 @@ builder.Services
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
     // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+
+/*** MediatR configuration ***/
+builder.Services.AddMediatR(config =>
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+/*** Carter configuration ***/
+builder.Services.AddCarter();
 
 /*** Swagger configuration ***/
 builder.Services.AddSwaggerGen(c =>
@@ -78,8 +80,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-/*** Add Endpoints ***/
-app.MapCompanyEndpoints();
+app.MapCarter();
 
 app.UseHttpsRedirection();
 

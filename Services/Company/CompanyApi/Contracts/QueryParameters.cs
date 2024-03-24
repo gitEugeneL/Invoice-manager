@@ -1,4 +1,4 @@
-namespace CompanyApi.Models.Dto;
+namespace CompanyApi.Contracts;
 
 public sealed record QueryParameters(
     int PageNumber = 1,

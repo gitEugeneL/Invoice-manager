@@ -1,4 +1,4 @@
-namespace CompanyApi.Models.Entities;
+namespace CompanyApi.Entities;
 
 public sealed class Company
 {
