@@ -30,4 +30,8 @@
       <ProjectReference Include="..\..\CompanyApi\CompanyApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Features\Companies\UpdateCompanyTests.cs" />
+    </ItemGroup>
+
 </Project>

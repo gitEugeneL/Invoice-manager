@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace CompanyApi.IntegrationTests.Endpoints;
+namespace CompanyApi.IntegrationTests;
 
 public static class TestCase
 {

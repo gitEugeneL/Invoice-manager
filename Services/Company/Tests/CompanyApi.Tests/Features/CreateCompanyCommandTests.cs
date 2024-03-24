@@ -1,23 +1,32 @@
-using CompanyApi.Models.Dto;
+using CompanyApi.Features.Companies;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace CompanyApi.Tests.Models.Dto;
+namespace CompanyApi.Tests.Features;
 
-public class CreateCompanyDtoTests
+public class CreateCompanyCommandTests
 {
-    private readonly CreateCompanyValidator _validator = new();
+    private readonly CreateCompany.Validator _validator = new();
 
     [Fact]
     public void ValidCreateUserDto_PassesValidation()
     {
-        // Arrange
-        var model = new CreateCompanyDto("Example Company", "1234567890", "City", "Street", "1", "12345");
+        // arrange
+        var model = new CreateCompany.Command()
+        {
+            CurrentUserId = Guid.NewGuid(),
+            Name = "Example Company",
+            TaxNumber = "1234567890",
+            City = "City",
+            Street = "Street",
+            HouseNumber = "1A",
+            PostalCode = "12-456"
+        };
 
-        // Act
+        // act
         var result = _validator.TestValidate(model);
 
-        // Assert
+        // assert
         result.ShouldNotHaveAnyValidationErrors();
     }
     
@@ -33,13 +42,22 @@ public class CreateCompanyDtoTests
     [InlineData("Example Company", "1234567890", "City", "Street", "1", "")] // Empty PostalCode
     public void InvalidCreateCompanyDto_FailsValidation(string name, string taxNumber, string city, string street, string houseNumber, string postalCode)
     {
-        // Arrange
-        var model = new CreateCompanyDto(name, taxNumber, city, street, houseNumber, postalCode);
+        // arrange
+        var model = new CreateCompany.Command()
+        {
+            CurrentUserId = Guid.NewGuid(),
+            Name = name,
+            TaxNumber = taxNumber,
+            City = city,
+            Street = street,
+            HouseNumber = houseNumber,
+            PostalCode = postalCode
+        };
 
-        // Act
+        // act
         var result = _validator.TestValidate(model);
 
-        // Assert
+        // asssert
         result.ShouldHaveAnyValidationError();
     }
 }

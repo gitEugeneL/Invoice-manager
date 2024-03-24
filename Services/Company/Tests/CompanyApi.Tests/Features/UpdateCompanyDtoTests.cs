@@ -1,31 +1,33 @@
-using CompanyApi.Models.Dto;
+using CompanyApi.Features.Companies;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace CompanyApi.Tests.Models.Dto;
+namespace CompanyApi.Tests.Features;
 
 public class UpdateCompanyDtoTests
 {
-    private readonly UpdateCompanyValidator _validator = new();
+    private readonly UpdateCompany.Validator _validator = new();
 
     [Fact]
     public void ValidUpdateCompanyDto_PassesValidation()
     {
-        // Arrange
-        var model = new UpdateCompanyDto(
-            CompanyId: Guid.NewGuid(),
-            Name: "Updated Company",
-            TaxNumber: "1234567890",
-            City: "Updated City",
-            Street: "Updated Street",
-            HouseNumber: "1",
-            PostalCode: "12345"
-        );
-
-        // Act
+        // arrange
+        var model = new UpdateCompany.Command
+        {
+            CurrentUserId = Guid.NewGuid(),
+            CompanyId = Guid.NewGuid(),
+            Name = "Updated Company",
+            TaxNumber = "1234567890",
+            City = "Updated City",
+            Street = "Updated Street",
+            HouseNumber = "1",
+            PostalCode = "12345"
+        };
+        
+        // act
         var result = _validator.TestValidate(model);
 
-        // Assert
+        // assert
         result.ShouldNotHaveAnyValidationErrors();
     }
     
@@ -36,21 +38,23 @@ public class UpdateCompanyDtoTests
     [InlineData("Updated Company", "1234567890", "City", "Street", "1", "1234567891011")] // PostalCode too long
     public void InvalidUpdateCompanyDto_FailsValidation(string name, string taxNumber, string city, string street, string houseNumber, string postalCode)
     {
-        // Arrange
-        var model = new UpdateCompanyDto(
-            CompanyId: Guid.NewGuid(),
-            Name: name,
-            TaxNumber: taxNumber,
-            City: city,
-            Street: street,
-            HouseNumber: houseNumber,
-            PostalCode: postalCode
-        );
+        // arrange
+        var model = new UpdateCompany.Command
+        {
+            CurrentUserId = Guid.NewGuid(),
+            CompanyId = Guid.NewGuid(),
+            Name = name,
+            TaxNumber = taxNumber,
+            City = city,
+            Street = street,
+            HouseNumber = houseNumber,
+            PostalCode = postalCode
+        };
 
-        // Act
+        // act
         var result = _validator.TestValidate(model);
 
-        // Assert
+        // assert
         result.ShouldHaveAnyValidationError();
     }
 }
