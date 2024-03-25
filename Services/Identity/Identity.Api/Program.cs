@@ -1,9 +1,7 @@
 using System.Reflection;
+using Carter;
 using FluentValidation;
 using Identity.Api.Data;
-using Identity.Api.Endpoints;
-using Identity.Api.Repositories;
-using Identity.Api.Repositories.Interfaces;
 using Identity.Api.Security;
 using Identity.Api.Security.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddScoped<IPasswordManager, PasswordManager>()
-    .AddScoped<ITokenManager, TokenManager>()
-    .AddScoped<IUserRepository, UserRepository>();
+    .AddScoped<IPasswordService, PasswordService>()
+    .AddScoped<ITokenService, TokenService>();
 
 /*** FluentValidation files register ***/
 builder.Services
@@ -24,8 +21,15 @@ builder.Services
 
 /*** Database connection ***/
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
-    // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+    // options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+
+/*** MediatR configuration ***/
+builder.Services.AddMediatR(config =>
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+/*** Carter configuration ***/
+builder.Services.AddCarter();
 
 var app = builder.Build();
 
@@ -40,8 +44,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-/*** Add Endpoints ***/
-app.MapAuthEndpoints();
+app.MapCarter();
 
 app.UseHttpsRedirection();
 

@@ -2,6 +2,10 @@ namespace CompanyApi.Shared;
 
 public abstract class Errors
 {
+ 
+    // todo fix!!!!
+    
+    
     public sealed record NotFound(string Name, object Key)
         : Error(Code: $"{Name}.Null", Message: $"Entity: ({Key}) not found");
 

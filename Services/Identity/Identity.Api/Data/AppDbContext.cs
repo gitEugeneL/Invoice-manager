@@ -1,5 +1,5 @@
-using Identity.Api.Models.Entities;
-using Identity.Api.Models.Entities.Common;
+using Identity.Api.Entities;
+using Identity.Api.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Api.Data;
