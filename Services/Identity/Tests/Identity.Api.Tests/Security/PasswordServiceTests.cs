@@ -1,4 +1,4 @@
-using Identity.Api.Security;
+using IdentityApi.Security;
 using Xunit;
 
 namespace Identity.Api.Tests.Security;

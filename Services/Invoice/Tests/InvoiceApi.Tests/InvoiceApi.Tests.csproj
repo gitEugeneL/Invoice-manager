@@ -27,4 +27,8 @@
       <ProjectReference Include="..\..\InvoiceApi\InvoiceApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\" />
+    </ItemGroup>
+
 </Project>

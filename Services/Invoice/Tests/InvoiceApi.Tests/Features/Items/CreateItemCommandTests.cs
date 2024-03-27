@@ -1,18 +1,20 @@
 using FluentValidation.TestHelper;
-using InvoiceApi.Models.Dto.Items;
+using InvoiceApi.Features.Items;
 using Xunit;
 
-namespace InvoiceApi.Tests.Models.Dto.Items;
+namespace InvoiceApi.Tests.Features.Items;
 
-public class CreateItemDtoTests
+public class CreateItemCommandTests
 {
-    private readonly CreateItemValidator _validator = new();
+    private readonly CreateItem.Validator _validator = new();
     
     [Fact]
-    public void ValidCreateItemDto_PassesValidation()
+    public void ValidCreateItemCommand_PassesValidation()
     {
         // arrange
-        var model = new CreateItemDto(
+        var model = new CreateItem.Command
+        (
+            CurrentUserId: Guid.NewGuid(),
             InvoiceId: Guid.NewGuid(),
             Name: "Sample Item",
             Amount: 10,
@@ -36,10 +38,12 @@ public class CreateItemDtoTests
     [InlineData("Sample Item", 10, "Items", "", 100.50)] // Empty Vat
     [InlineData("Sample Item", 10, "Items", "InvalidVat", 100.50)] // Invalid Vat
     [InlineData("Sample Item", 10, "Items", "Vat23", 0)] // NetPrice less than 1
-    public void InvalidCreateItemDto_FailsValidation(string name, int amount, string unit, string vat, decimal netPrice)
+    public void InvalidCreateItemCommand_FailsValidation(string name, int amount, string unit, string vat, decimal netPrice)
     {
         // Arrange
-        var model = new CreateItemDto(
+        var model = new CreateItem.Command
+        (
+            CurrentUserId: Guid.NewGuid(),
             InvoiceId: Guid.NewGuid(),
             Name: name,
             Amount: amount,

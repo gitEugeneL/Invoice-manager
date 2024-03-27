@@ -1,18 +1,20 @@
 using FluentValidation.TestHelper;
-using InvoiceApi.Models.Dto.Items;
+using InvoiceApi.Features.Items;
 using Xunit;
 
-namespace InvoiceApi.Tests.Models.Dto.Items;
+namespace InvoiceApi.Tests.Features.Items;
 
-public class UpdateItemDtoTests
+public class UpdateItemRequestTests
 {
-    private readonly UpdateItemValidator _validator = new();
+    private readonly UpdateItem.Validator _validator = new();
     
     [Fact]
-    public void ValidUpdateItemDto_PassesValidation()
+    public void ValidUpdateItemCommand_PassesValidation()
     {
         // arrange
-        var model = new UpdateItemDto(
+        var model = new UpdateItem.Command
+        (
+            CurrentUserId: Guid.NewGuid(),
             ItemId: Guid.NewGuid(),
             Name: "Updated Item",
             Amount: 15,
@@ -29,10 +31,12 @@ public class UpdateItemDtoTests
     [InlineData(0, 150.75)] // Amount less than 1
     [InlineData(1000000, 150.75)] // Amount greater than 999999
     [InlineData(15, 0)] // NetPrice less than 1
-    public void InvalidUpdateItemDto_FailsValidation(int amount, decimal netPrice)
+    public void InvalidUpdateItemCommand_FailsValidation(int amount, decimal netPrice)
     {
         // arrange
-        var model = new UpdateItemDto(
+        var model = new UpdateItem.Command
+        (
+            CurrentUserId: Guid.NewGuid(),
             ItemId: Guid.NewGuid(),
             Name: "Updated Item",
             Amount: amount,

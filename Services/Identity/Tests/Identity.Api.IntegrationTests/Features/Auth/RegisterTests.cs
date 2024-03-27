@@ -1,6 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using Identity.Api.Contracts;
+using IdentityApi.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 

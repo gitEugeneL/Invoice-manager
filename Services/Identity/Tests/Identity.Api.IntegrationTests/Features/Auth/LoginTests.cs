@@ -1,9 +1,9 @@
 using System.Net;
 using FluentAssertions;
-using Identity.Api.Contracts;
+using IdentityApi.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
-using RegisterRequest = Identity.Api.Contracts.RegisterRequest;
+using RegisterRequest = IdentityApi.Contracts.RegisterRequest;
 
 namespace Identity.Api.IntegrationTests.Features.Auth;
 

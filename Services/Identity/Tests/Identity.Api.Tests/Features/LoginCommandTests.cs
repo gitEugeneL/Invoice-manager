@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using Identity.Api.Features.Auth;
+using IdentityApi.Features.Auth;
 using Xunit;
 
 namespace Identity.Api.Tests.Features;

@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
-using Identity.Api.Contracts;
-using Identity.Api.Data;
+using IdentityApi.Contracts;
+using IdentityApi.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
