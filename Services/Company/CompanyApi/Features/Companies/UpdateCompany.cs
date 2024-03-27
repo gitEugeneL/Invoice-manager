@@ -1,33 +1,52 @@
 using Carter;
+using Carter.ModelBinding;
 using CompanyApi.Contracts.Companies;
 using CompanyApi.Data;
-using CompanyApi.Shared;
+using CompanyApi.Domain;
+using CompanyApi.Helpers;
+using CompanyApi.Services;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyApi.Features.Companies;
 
-public static class UpdateCompany
+public class UpdateCompany : ICarterModule
 {
-    public sealed class Command : IRequest<Result<CompanyResponse>>
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
-        public Guid CurrentUserId { get; init; }
-        
-        public Guid CompanyId { get; init; }
-        
-        public string? Name { get; init; }
-        
-        public string? TaxNumber { get; init; }
-        
-        public string? City { get; init; }
-        
-        public string? Street { get; init; }
-        
-        public string? HouseNumber { get; init; }
-        
-        public string? PostalCode { get; init; }
+        app.MapPut("api/v1/company", async (HttpContext context, UpdateCompanyRequest request, ISender sender) =>
+            {
+                var command = new Command(
+                    CurrentUserId: TokenService.ReadUserIdFromToken(context),
+                    CompanyId: request.CompanyId,
+                    Name: request.Name,
+                    TaxNumber: request.TaxNumber,
+                    City: request.City,
+                    Street: request.Street,
+                    HouseNumber: request.HouseNumber,
+                    PostalCode: request.PostalCode
+                );
+                return await sender.Send(command);
+            })
+            .RequireAuthorization(AppConstants.BaseAuthPolicy)
+            .WithTags(nameof(Company))
+            .Produces<CompanyResponse>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
     }
+    
+    public sealed record Command(
+        Guid CurrentUserId,
+        Guid CompanyId,
+        string? Name,
+        string? TaxNumber,
+        string? City,
+        string? Street,
+        string? HouseNumber,
+        string? PostalCode
+    ) : IRequest<Results<Ok<CompanyResponse>, NotFound<string>, ValidationProblem>>;
     
     public sealed class Validator : AbstractValidator<Command>
     {
@@ -60,69 +79,35 @@ public static class UpdateCompany
     internal sealed class Handler(
         AppDbContext dbContext, 
         IValidator<Command> validator
-    ) : IRequestHandler<Command, Result<CompanyResponse>>
+    ) : IRequestHandler<Command, Results<Ok<CompanyResponse>, NotFound<string>, ValidationProblem>>
     {
-        public async Task<Result<CompanyResponse>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Results<Ok<CompanyResponse>, NotFound<string>, ValidationProblem>> 
+            Handle(Command command, CancellationToken ct)
         {
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            var validationResult = await validator.ValidateAsync(command, ct);
             if (!validationResult.IsValid)
-                return Result.Failure<CompanyResponse>(new Errors.Validation(
-                    nameof(UpdateCompany), validationResult.ToString()));
+                return TypedResults.ValidationProblem(validationResult.GetValidationProblems());
             
             var company = await dbContext
                 .Companies
-                .Where(c => c.Id == request.CompanyId && c.CreatedByUserId == request.CurrentUserId)
-                .SingleOrDefaultAsync(cancellationToken);
+                .Where(c => c.Id == command.CompanyId && c.CreatedByUserId == command.CurrentUserId)
+                .SingleOrDefaultAsync(ct);
 
             if (company is null)
-                return Result.Failure<CompanyResponse>(new Errors.NotFound(
-                    nameof(UpdateCompany), request.CompanyId));
+                return TypedResults.NotFound($"Company {command.CompanyId} not found");
             
-            company.Name = request.Name ?? company.Name;
-            company.Name = request.Name ?? company.Name;
-            company.TaxNumber = request.TaxNumber ?? company.TaxNumber;
-            company.City = request.City ?? company.City;
-            company.Street = request.Street ?? company.Street;
-            company.HouseNumber = request.HouseNumber ?? company.HouseNumber;
-            company.PostalCode = request.PostalCode ?? company.PostalCode;
+            company.Name = command.Name ?? company.Name;
+            company.Name = command.Name ?? company.Name;
+            company.TaxNumber = command.TaxNumber ?? company.TaxNumber;
+            company.City = command.City ?? company.City;
+            company.Street = command.Street ?? company.Street;
+            company.HouseNumber = command.HouseNumber ?? company.HouseNumber;
+            company.PostalCode = command.PostalCode ?? company.PostalCode;
 
             dbContext.Companies.Update(company);
-            await dbContext.SaveChangesAsync(cancellationToken);
-            
-            return new CompanyResponse(company);
-        }
-    }
-}
+            await dbContext.SaveChangesAsync(ct);
 
-public class UpdateCompanyEndpoint : ICarterModule
-{
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
-        app.MapPut("api/v1/company", async (HttpContext context, UpdateCompanyRequest request, ISender sender) =>
-            {
-                var result = await sender.Send(new UpdateCompany.Command
-                {
-                    CurrentUserId = TokenService.ReadUserIdFromToken(context),
-                    CompanyId = request.CompanyId,
-                    Name = request.Name,
-                    TaxNumber = request.TaxNumber,
-                    City = request.City,
-                    Street = request.Street,
-                    HouseNumber = request.HouseNumber,
-                    PostalCode = request.PostalCode
-                });
-                
-                return result.IsFailure switch
-                {
-                    true when result.Error is Errors.Validation => Results.BadRequest(result.Error),
-                    true when result.Error is Errors.NotFound => Results.NotFound(result.Error), 
-                    _ => Results.Ok(result.Value)
-                };
-            })
-            .RequireAuthorization("base-policy")
-            .Produces<CompanyResponse>()
-            .WithTags("Company")
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound);
+            return TypedResults.Ok(new CompanyResponse(company));
+        }
     }
 }

@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace CompanyApi.Shared;
+namespace CompanyApi.Services;
 
 public static class TokenService
 {

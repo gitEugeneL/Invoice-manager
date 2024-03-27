@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Carter;
 using CompanyApi.Data;
+using CompanyApi.Helpers;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +63,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 /*** Auth policies ***/
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("base-policy", policy =>
+    .AddPolicy(AppConstants.BaseAuthPolicy, policy =>
         policy
             .RequireClaim(ClaimTypes.Email)
             .RequireClaim(ClaimTypes.NameIdentifier));

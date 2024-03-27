@@ -1,4 +1,4 @@
-using CompanyApi.Entities;
+using CompanyApi.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyApi.Data;
@@ -32,7 +32,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     
     public override Task<int> SaveChangesAsync(
         bool acceptAllChangesOnSuccess,
-        CancellationToken token = default)
+        CancellationToken ct = default)
     {
         foreach (var entity in ChangeTracker.Entries()
                      .Where(x => x is { Entity: Company, State: EntityState.Modified })
@@ -41,6 +41,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             entity.Updated = DateTime.UtcNow;
         }
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, token);
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, ct);
     }
 }

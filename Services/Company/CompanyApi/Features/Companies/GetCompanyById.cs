@@ -1,61 +1,54 @@
 using Carter;
 using CompanyApi.Contracts.Companies;
 using CompanyApi.Data;
-using CompanyApi.Shared;
+using CompanyApi.Domain;
+using CompanyApi.Helpers;
+using CompanyApi.Services;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyApi.Features.Companies;
 
-public static class GetCompanyById
-{
-    public sealed class Query : IRequest<Result<CompanyResponse>>
-    {
-        public Guid CurrentUserId { get; init; }
-        
-        public Guid CompanyId { get; init; }
-    }
-    
-    internal sealed class Handler(AppDbContext dbContext) : IRequestHandler<Query, Result<CompanyResponse>>
-    {
-        public async Task<Result<CompanyResponse>> Handle(Query request, CancellationToken cancellationToken)
-        {
-            var companyResponse = await dbContext
-                .Companies
-                .AsNoTracking()
-                .Where(c => c.Id == request.CompanyId && c.CreatedByUserId == request.CurrentUserId)
-                .Select(company => new CompanyResponse(company))
-                .SingleOrDefaultAsync(cancellationToken);
-
-            if (companyResponse is null)
-                return Result.Failure<CompanyResponse>(new Errors.NotFound(
-                    nameof(GetCompanyById), request.CompanyId));
-            
-            return companyResponse;
-        }
-    }
-}
-
-public class GetCompanyByIdEndpoint : ICarterModule
+public class GetCompanyById : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("api/v1/company/{id:guid}", async (Guid id, HttpContext context, ISender sender) =>
             {
-                var query = new GetCompanyById.Query
-                {
-                    CurrentUserId = TokenService.ReadUserIdFromToken(context),
-                    CompanyId = id
-                };
-                var result = await sender.Send(query);
-
-                return result.IsFailure
-                    ? Results.NotFound(result.Error)
-                    : Results.Ok(result.Value);
+                var query = new Query(
+                    CurrentUserId: TokenService.ReadUserIdFromToken(context),
+                    CompanyId: id
+                );
+                return await sender.Send(query);
             })
-            .RequireAuthorization("base-policy")
-            .WithTags("Company")
+            .RequireAuthorization(AppConstants.BaseAuthPolicy)
+            .WithTags(nameof(Company))
             .Produces<CompanyResponse>()
             .Produces(StatusCodes.Status404NotFound);
+    }
+    
+    public sealed record Query(
+        Guid CurrentUserId,
+        Guid CompanyId
+    ) : IRequest<Results<Ok<CompanyResponse>, NotFound<string>>>;
+    
+    internal sealed class Handler(
+        AppDbContext dbContext
+    ) : IRequestHandler<Query, Results<Ok<CompanyResponse>, NotFound<string>>>
+    {
+        public async Task<Results<Ok<CompanyResponse>, NotFound<string>>> Handle(Query query, CancellationToken ct)
+        {
+            var companyResponse = await dbContext
+                .Companies
+                .AsNoTracking()
+                .Where(c => c.Id == query.CompanyId && c.CreatedByUserId == query.CurrentUserId)
+                .Select(company => new CompanyResponse(company))
+                .SingleOrDefaultAsync(ct);
+
+            return companyResponse is not null
+                ? TypedResults.Ok(companyResponse)
+                : TypedResults.NotFound($"Company {query.CompanyId} not found");
+        }
     }
 }

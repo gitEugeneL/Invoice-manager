@@ -1,4 +1,4 @@
-namespace CompanyApi.Entities;
+namespace CompanyApi.Domain;
 
 public sealed class Company
 {
