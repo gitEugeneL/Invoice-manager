@@ -1,6 +1,6 @@
-using Identity.Api.Entities;
+using IdentityApi.Domain.Entities;
 
-namespace Identity.Api.Security.Interfaces;
+namespace IdentityApi.Security.Interfaces;
 
 public interface ITokenService
 {

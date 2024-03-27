@@ -1,8 +1,8 @@
-using Identity.Api.Entities;
-using Identity.Api.Entities.Common;
+using IdentityApi.Domain.Entities;
+using IdentityApi.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Identity.Api.Data;
+namespace IdentityApi.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

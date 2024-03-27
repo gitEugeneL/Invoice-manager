@@ -1,6 +1,6 @@
-using Identity.Api.Entities.Common;
+using IdentityApi.Domain.Entities.Common;
 
-namespace Identity.Api.Entities;
+namespace IdentityApi.Domain.Entities;
 
 public sealed class User : BaseAuditableEntity
 {

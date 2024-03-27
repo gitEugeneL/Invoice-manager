@@ -1,4 +1,4 @@
-namespace Identity.Api.Entities.Common;
+namespace IdentityApi.Domain.Entities.Common;
 
 public abstract class BaseEntity
 {

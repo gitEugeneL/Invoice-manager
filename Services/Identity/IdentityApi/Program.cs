@@ -1,9 +1,9 @@
 using System.Reflection;
 using Carter;
 using FluentValidation;
-using Identity.Api.Data;
-using Identity.Api.Security;
-using Identity.Api.Security.Interfaces;
+using IdentityApi.Data;
+using IdentityApi.Security;
+using IdentityApi.Security.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +21,8 @@ builder.Services
 
 /*** Database connection ***/
 builder.Services.AddDbContext<AppDbContext>(options =>
-    // options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
-    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
+    // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
 /*** MediatR configuration ***/
 builder.Services.AddMediatR(config =>

@@ -1,4 +1,4 @@
-namespace Identity.Api.Contracts;
+namespace IdentityApi.Contracts;
 
 public sealed record LoginResponse(
     string AccessToken,

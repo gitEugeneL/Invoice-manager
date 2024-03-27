@@ -1,6 +1,6 @@
-using Identity.Api.Security.Interfaces;
+using IdentityApi.Security.Interfaces;
 
-namespace Identity.Api.Security;
+namespace IdentityApi.Security;
 
 public sealed class PasswordService : IPasswordService
 {
