@@ -1,8 +1,8 @@
 using System.Security.Claims;
 
-namespace InvoiceApi.Utils;
+namespace InvoiceApi.Services;
 
-public static class BaseService
+public static class TokenService
 {
     public static Guid ReadUserIdFromToken(HttpContext httpContext)
     {

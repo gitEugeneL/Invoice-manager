@@ -1,11 +1,10 @@
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using Carter;
 using FluentValidation;
 using InvoiceApi.Data;
-using InvoiceApi.Endpoints;
-using InvoiceApi.Repositories;
-using InvoiceApi.Repositories.Interfaces;
+using InvoiceApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,10 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services
-    .AddScoped<IItemRepository, ItemRepository>()
-    .AddScoped<IInvoiceRepository, InvoiceRepository>();
-
 /*** FluentValidation files register ***/
 builder.Services
     .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -29,6 +24,13 @@ builder.Services
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL")));    
     // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+
+/*** MediatR configuration ***/
+    builder.Services.AddMediatR(config =>
+        config.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+/*** Carter configuration ***/
+    builder.Services.AddCarter();
 
 /*** Swagger configuration ***/
     builder.Services.AddSwaggerGen(c =>
@@ -61,7 +63,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 /*** Auth policies ***/
     builder.Services.AddAuthorizationBuilder()
-        .AddPolicy("base-policy", policy =>
+        .AddPolicy(AppConstants.BaseAuthPolicy, policy =>
             policy
                 .RequireClaim(ClaimTypes.Email)
                 .RequireClaim(ClaimTypes.NameIdentifier));
@@ -79,8 +81,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapInvoiceEndpoints();
-app.MapItemEndpoints();
+app.MapCarter();
 
 app.UseHttpsRedirection();
 

@@ -3,8 +3,8 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using InvoiceApi.Contracts.Invoices;
 using InvoiceApi.Data;
-using InvoiceApi.Models.Dto.Invoices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-
-namespace InvoiceApi.IntegrationTests.Endpoints;
+namespace InvoiceApi.IntegrationTests.Features;
 
 public static class TestCase
 {
@@ -87,13 +86,5 @@ public static class TestCase
     {
         return new StringContent(
             JsonConvert.SerializeObject(o), Encoding.UTF8, "application/json");
-    }
-    
-    public static async Task<InvoiceResponseDto> CreateInvoice(HttpClient client)
-    {
-        var model = new CreateInvoiceDto(
-            Guid.NewGuid(), Guid.NewGuid(), 3, "Cash", "Unpaid");
-        var response = await client.PostAsync("api/v1/invoice", TestCase.CreateContext(model));
-        return await TestCase.DeserializeResponse<InvoiceResponseDto>(response);
     }
 }

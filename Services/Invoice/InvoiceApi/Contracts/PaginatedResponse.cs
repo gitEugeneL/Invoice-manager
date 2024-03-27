@@ -1,4 +1,4 @@
-namespace InvoiceApi.Models.Dto;
+namespace InvoiceApi.Contracts;
 
 public sealed class PaginatedResponse<T>(IReadOnlyCollection<T> items, int totalItemsCount, int pageNumber, int pageSize)
 {

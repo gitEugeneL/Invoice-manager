@@ -1,4 +1,4 @@
-namespace InvoiceApi.Models.Dto;
+namespace InvoiceApi.Contracts;
 
 public sealed record QueryParameters(
     int PageNumber = 1,

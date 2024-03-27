@@ -14,7 +14,7 @@ services:
   
   identity.api:
     build:
-      context: ./Services/Identity/Identity.Api
+      context: ./Services/Identity/IdentityApi
       dockerfile: Dockerfile
       
   # -------------------------------------------------

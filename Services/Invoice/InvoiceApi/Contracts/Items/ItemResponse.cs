@@ -1,8 +1,8 @@
 using InvoiceApi.Models.Entities;
 
-namespace InvoiceApi.Models.Dto.Items;
+namespace InvoiceApi.Contracts.Items;
 
-public sealed class ItemResponseDto()
+public sealed class ItemResponse()
 {
     public Guid InvoiceId { get; init; }
     public Guid ItemId { get; init; }
@@ -14,7 +14,7 @@ public sealed class ItemResponseDto()
     public decimal SumNetPrice { get; init; } 
     public decimal SumGrossPrice { get; init; }
 
-    public ItemResponseDto(Item item) : this()
+    public ItemResponse(Item item) : this()
     {
         InvoiceId = item.InvoiceId;
         ItemId = item.Id;

@@ -1,8 +1,8 @@
 using InvoiceApi.Models.Entities;
 
-namespace InvoiceApi.Models.Dto.Invoices;
+namespace InvoiceApi.Contracts.Invoices;
 
-public sealed class InvoiceResponseDto()
+public sealed class InvoiceResponse()
 {
     public Guid InvoiceId { get; init; }
     public Guid SellerCompanyId { get; init; }
@@ -15,7 +15,7 @@ public sealed class InvoiceResponseDto()
     public string Status { get; init; } = string.Empty;
     public List<Guid> ItemsId { get; init; } = []; 
     
-    public InvoiceResponseDto(Invoice invoice) : this()
+    public InvoiceResponse(Invoice invoice) : this()
     {
         InvoiceId = invoice.Id;
         SellerCompanyId = invoice.SellerCompanyId;
