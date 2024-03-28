@@ -9,6 +9,11 @@ services:
   
   # -------------------------------------------------
   
+  rabbitmq: 
+    image: rabbitmq:management
+    
+  # -------------------------------------------------
+  
   identity.api.database:
     image: postgres:latest
   

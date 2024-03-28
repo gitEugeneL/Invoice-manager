@@ -21,6 +21,23 @@ services:
     
 #---------------------------------------------------------------------------
     
+  rabbitmq:
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    hostname: invoice-manager-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - proxybackend
+    volumes:
+      - ./.containers/invoice-manager-rabbitmq/data/:/var/lib/rabbitmq:rw
+      - ./.containers/invoice-manager-rabbitmq/log/:/var/log/rabbitmq:rw
+  
+#---------------------------------------------------------------------------  
+    
   identity.api.database:
     container_name: identity.api.database
     environment:
@@ -30,7 +47,7 @@ services:
     ports: 
       - "5432:5432"
     volumes: 
-      - identity.api.database:/var/lib/postgresql/data:rw
+      - ./.containers/identity.api.database:/var/lib/postgresql/data:rw
     networks:
       - proxybackend
     
@@ -61,7 +78,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - company.api.database:/var/lib/postgresql/data:rw
+      - ./.containers/company.api.database:/var/lib/postgresql/data:rw
     networks:
       - proxybackend
     
@@ -93,7 +110,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - invoice.api.database:/var/lib/postgresql/data:rw
+      - ./.containers/invoice.api.database:/var/lib/postgresql/data:rw
     networks:
       - proxybackend
     
@@ -118,6 +135,7 @@ services:
 #---------------------------------------------------------------------------
 
 volumes:
+  invoice-manager-rabbitmq:
   invoice.api.database:
   identity.api.database:
   company.api.database:
