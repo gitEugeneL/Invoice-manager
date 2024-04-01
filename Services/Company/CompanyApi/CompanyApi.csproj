@@ -11,6 +11,7 @@
     <ItemGroup>
         <PackageReference Include="Carter" Version="8.0.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.0" />
         <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
@@ -28,6 +29,10 @@
       <None Remove="sqlite-data.db-wal" />
       <None Remove="sqlite-data.db-shm" />
       <None Remove="sqlite-data.db" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Contracts\Contracts.csproj" />
     </ItemGroup>
 
 </Project>

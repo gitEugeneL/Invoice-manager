@@ -5,6 +5,7 @@ using Carter;
 using FluentValidation;
 using InvoiceApi.Data;
 using InvoiceApi.Helpers;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,47 +27,62 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     // options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
 /*** MediatR configuration ***/
-    builder.Services.AddMediatR(config =>
-        config.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddMediatR(config =>
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 /*** Carter configuration ***/
-    builder.Services.AddCarter();
+builder.Services.AddCarter();
+
+/*** MasTransit Rabbit-MQ configuration ***/
+builder.Services.AddMassTransit(busConfigurator =>
+{
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.UsingRabbitMq((context, configurator) =>
+    {
+        configurator.Host(new Uri(builder.Configuration["MessageBroker:Host"]!), host =>
+        {
+            host.Username(builder.Configuration["MessageBroker:Username"]);
+            host.Password(builder.Configuration["MessageBroker:Password"]);
+        });
+        configurator.ConfigureEndpoints(context);
+    });
+});
 
 /*** Swagger configuration ***/
-    builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-        {
-            Description = "JWT Bearer Authorization with refresh token. Example: Bearer {your access token....}",
-            In = ParameterLocation.Header,
-            Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey
-        });
-        c.OperationFilter<SecurityRequirementsOperationFilter>();
+        Description = "JWT Bearer Authorization with refresh token. Example: Bearer {your access token....}",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
     });
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 /*** JWT  auth configuration ***/
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes(builder.Configuration.GetSection("Authentication:Key").Value!)),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.FromMinutes(1) // allowed time deviation, 5min - default
-            };
-        });
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("Authentication:Key").Value!)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1) // allowed time deviation, 5min - default
+        };
+    });
 
 /*** Auth policies ***/
-    builder.Services.AddAuthorizationBuilder()
-        .AddPolicy(AppConstants.BaseAuthPolicy, policy =>
-            policy
-                .RequireClaim(ClaimTypes.Email)
-                .RequireClaim(ClaimTypes.NameIdentifier));
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(AppConstants.BaseAuthPolicy, policy =>
+        policy
+            .RequireClaim(ClaimTypes.Email)
+            .RequireClaim(ClaimTypes.NameIdentifier));
 
 var app = builder.Build();
 

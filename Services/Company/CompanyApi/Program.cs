@@ -2,9 +2,11 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Carter;
+using CompanyApi.Consumers;
 using CompanyApi.Data;
 using CompanyApi.Helpers;
 using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -67,6 +69,24 @@ builder.Services.AddAuthorizationBuilder()
         policy
             .RequireClaim(ClaimTypes.Email)
             .RequireClaim(ClaimTypes.NameIdentifier));
+
+
+/*** MasTransit Rabbit-MQ configuration ***/
+builder.Services.AddMassTransit(busConfigurator =>
+{
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.AddConsumer<GetCompanyConsumer>();
+    
+    busConfigurator.UsingRabbitMq((context, configurator) =>
+    {
+        configurator.Host(new Uri(builder.Configuration["MessageBroker:Host"]!), host =>
+        {
+            host.Username(builder.Configuration["MessageBroker:Username"]);
+            host.Password(builder.Configuration["MessageBroker:Password"]);
+        });
+        configurator.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 
