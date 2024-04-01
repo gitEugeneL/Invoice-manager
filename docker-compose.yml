@@ -4,42 +4,47 @@ services:
   
   gateway.api:
     build:
-      context: ./Gateway/GatewayApi
-      dockerfile: Dockerfile
-  
-  # -------------------------------------------------
-  
+      context: .
+      dockerfile: Gateway/GatewayApi/Dockerfile
+
+# -------------------------------------------------
+
   rabbitmq: 
     image: rabbitmq:management
-    
-  # -------------------------------------------------
-  
+
+# -------------------------------------------------
+
+  file-generator.api:
+    build:
+      context: .
+      dockerfile: Services/FileGenerator/FileGeneratorApi/Dockerfile
+
+# -------------------------------------------------
+
   identity.api.database:
     image: postgres:latest
-  
+
   identity.api:
     build:
-      context: ./Services/Identity/IdentityApi
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Services/Identity/IdentityApi/Dockerfile
       
-  # -------------------------------------------------
-      
+# -------------------------------------------------      
+
   company.api.database:
     image: postgres:latest
-    
+
   company.api:
     build:
-      context: ./Services/Company/CompanyApi
-      dockerfile: Dockerfile
-      
-  # -------------------------------------------------
-    
+      context: .
+      dockerfile: Services/Company/CompanyApi/Dockerfile
+
+# -------------------------------------------------
+
   invoice.api.database:
     image: postgres:latest
-    
+
   invoice.api:
     build:
-      context: ./Services/Invoice/InvoiceApi
-      dockerfile: Dockerfile
-      
-  # -------------------------------------------------    
+      context: .
+      dockerfile: Services/Invoice/InvoiceApi/Dockerfile

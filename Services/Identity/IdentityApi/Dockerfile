@@ -4,11 +4,11 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["IdentityApi.csproj", "./"]
-RUN dotnet restore "./IdentityApi.csproj"
+COPY ["Services/Identity/IdentityApi/IdentityApi.csproj", "Services/Identity/IdentityApi/"]
+RUN dotnet restore "./Services/Identity/IdentityApi/IdentityApi.csproj"
 
 COPY . .
-WORKDIR "/src/"
+WORKDIR "/src/Services/Identity/IdentityApi"
 RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish

@@ -4,11 +4,11 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["GatewayApi.csproj", "./"]
-RUN dotnet restore "./GatewayApi.csproj"
+COPY ["Gateway/GatewayApi/GatewayApi.csproj", "Gateway/GatewayApi/"]
+RUN dotnet restore "./Gateway/GatewayApi/GatewayApi.csproj"
 
 COPY . .
-WORKDIR "/src/"
+WORKDIR "/src/Gateway/GatewayApi"
 RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish
@@ -18,4 +18,3 @@ FROM base AS runtime
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "GatewayApi.dll"]
-

@@ -4,11 +4,12 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["CompanyApi.csproj", "./"]
-RUN dotnet restore "./CompanyApi.csproj"
+COPY ["Services/Company/CompanyApi/CompanyApi.csproj", "Services/Company/CompanyApi/"]
+COPY ["Services/Contracts/Contracts.csproj", "Services/Contracts/"]
+RUN dotnet restore "./Services/Company/CompanyApi/CompanyApi.csproj"
 
 COPY . .
-WORKDIR "/src/"
+WORKDIR "/src/Services/Company/CompanyApi"
 RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish

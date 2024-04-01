@@ -16,6 +16,7 @@ services:
       - identity.api
       - company.api
       - invoice.api
+      - file-generator.api
     networks:
       - proxybackend
     
@@ -38,6 +39,27 @@ services:
   
 #---------------------------------------------------------------------------  
     
+  file-generator.api:
+    container_name: fileGenerator.api
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+      - "MessageBroker__Host=amqp://invoice-manager-rabbitmq:5672"
+      - "MessageBroker__Username=user"
+      - "MessageBroker__Password=password"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    networks:
+      - proxybackend
+    depends_on:
+      - company.api
+      - invoice.api
+      - identity.api
+      - rabbitmq
+
+#---------------------------------------------------------------------------  
+      
   identity.api.database:
     container_name: identity.api.database
     environment:
@@ -50,7 +72,7 @@ services:
       - ./.containers/identity.api.database:/var/lib/postgresql/data:rw
     networks:
       - proxybackend
-    
+
   identity.api:
     container_name: identity.api 
     environment:
@@ -66,9 +88,9 @@ services:
       - identity.api.database
     networks:
       - proxybackend
-    
+
 #---------------------------------------------------------------------------
-  
+
   company.api.database:
     container_name: company.api.database
     environment:
@@ -81,12 +103,15 @@ services:
       - ./.containers/company.api.database:/var/lib/postgresql/data:rw
     networks:
       - proxybackend
-    
+
   company.api:
     container_name: company.api
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
       - "ConnectionStrings__PSQL=Host=company.api.database;Port=5432;Database=app;Username=user;Password=password;"
+      - "MessageBroker__Host=amqp://invoice-manager-rabbitmq:5672"
+      - "MessageBroker__Username=user"
+      - "MessageBroker__Password=password"
     ports:
       - "8001:8080"
     deploy:
@@ -113,12 +138,15 @@ services:
       - ./.containers/invoice.api.database:/var/lib/postgresql/data:rw
     networks:
       - proxybackend
-    
+
   invoice.api:
     container_name: invoice.api
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
       - "ConnectionStrings__PSQL=Host=invoice.api.database;Port=5432;Database=app;Username=user;Password=password;"
+      - "MessageBroker__Host=amqp://invoice-manager-rabbitmq:5672"
+      - "MessageBroker__Username=user"
+      - "MessageBroker__Password=password"
     ports:
       - "8002:8080"
     deploy:
@@ -139,7 +167,7 @@ volumes:
   invoice.api.database:
   identity.api.database:
   company.api.database:
-    
+
 networks:
   proxybackend:
     name: proxybackend
