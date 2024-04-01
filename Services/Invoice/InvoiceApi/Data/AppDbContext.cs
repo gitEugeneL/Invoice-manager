@@ -1,5 +1,5 @@
-using InvoiceApi.Models.Entities;
-using InvoiceApi.Models.Entities.Common;
+using InvoiceApi.Domain.Entities;
+using InvoiceApi.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace InvoiceApi.Data;

@@ -1,4 +1,4 @@
-using CompanyApi.Domain;
+using CompanyApi.Domain.Entities;
 
 namespace CompanyApi.Contracts.Companies;
 

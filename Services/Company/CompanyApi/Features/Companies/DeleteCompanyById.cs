@@ -1,6 +1,6 @@
 using Carter;
 using CompanyApi.Data;
-using CompanyApi.Domain;
+using CompanyApi.Domain.Entities;
 using CompanyApi.Helpers;
 using CompanyApi.Services;
 using MediatR;

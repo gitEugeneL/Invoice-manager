@@ -1,8 +1,8 @@
 using Carter;
 using InvoiceApi.Contracts.Items;
 using InvoiceApi.Data;
+using InvoiceApi.Domain.Entities;
 using InvoiceApi.Helpers;
-using InvoiceApi.Models.Entities;
 using InvoiceApi.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;

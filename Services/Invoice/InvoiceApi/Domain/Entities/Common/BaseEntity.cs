@@ -1,4 +1,4 @@
-namespace InvoiceApi.Models.Entities.Common;
+namespace InvoiceApi.Domain.Entities.Common;
 
 public abstract class BaseEntity
 {

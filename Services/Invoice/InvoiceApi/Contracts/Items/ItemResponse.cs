@@ -1,4 +1,4 @@
-using InvoiceApi.Models.Entities;
+using InvoiceApi.Domain.Entities;
 
 namespace InvoiceApi.Contracts.Items;
 

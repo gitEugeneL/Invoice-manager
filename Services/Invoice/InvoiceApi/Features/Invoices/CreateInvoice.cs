@@ -3,9 +3,9 @@ using Carter.ModelBinding;
 using FluentValidation;
 using InvoiceApi.Contracts.Invoices;
 using InvoiceApi.Data;
+using InvoiceApi.Domain.Entities;
+using InvoiceApi.Domain.Entities.Enums;
 using InvoiceApi.Helpers;
-using InvoiceApi.Models.Entities;
-using InvoiceApi.Models.Entities.Enums;
 using InvoiceApi.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -83,6 +83,8 @@ public class CreateInvoice : ICarterModule
             if (!validationResult.IsValid)
                 return TypedResults.ValidationProblem(validationResult.GetValidationProblems());
 
+            // todo check company id
+            
             var date = DateTime.Now;
             
             var invoiceCount = await dbContext

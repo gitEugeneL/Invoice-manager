@@ -1,4 +1,5 @@
 using CompanyApi.Domain;
+using CompanyApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyApi.Data;

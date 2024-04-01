@@ -3,14 +3,14 @@ using Carter.ModelBinding;
 using FluentValidation;
 using InvoiceApi.Contracts.Items;
 using InvoiceApi.Data;
+using InvoiceApi.Domain.Entities;
+using InvoiceApi.Domain.Entities.Enums;
 using InvoiceApi.Helpers;
-using InvoiceApi.Models.Entities;
-using InvoiceApi.Models.Entities.Enums;
 using InvoiceApi.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Unit = InvoiceApi.Models.Entities.Enums.Unit;
+using Unit = InvoiceApi.Domain.Entities.Enums.Unit;
 
 namespace InvoiceApi.Features.Items;
 

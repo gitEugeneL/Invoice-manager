@@ -1,7 +1,7 @@
 using System.Net;
 using FluentAssertions;
 using InvoiceApi.Contracts.Items;
-using InvoiceApi.Models.Entities.Enums;
+using InvoiceApi.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 

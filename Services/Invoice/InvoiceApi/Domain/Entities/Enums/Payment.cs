@@ -1,4 +1,4 @@
-namespace InvoiceApi.Models.Entities.Enums;
+namespace InvoiceApi.Domain.Entities.Enums;
 
 public enum Payment
 {

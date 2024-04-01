@@ -1,7 +1,7 @@
-using InvoiceApi.Models.Entities.Common;
-using InvoiceApi.Models.Entities.Enums;
+using InvoiceApi.Domain.Entities.Common;
+using InvoiceApi.Domain.Entities.Enums;
 
-namespace InvoiceApi.Models.Entities;
+namespace InvoiceApi.Domain.Entities;
 
 public sealed class Item : BaseEntity
 {
