@@ -87,7 +87,7 @@ public class Login : ICarterModule
             await dbContext.SaveChangesAsync(ct);
 
             return TypedResults.Ok(
-                new LoginResponse(accessToken, refreshToken.Token, refreshToken.Expires, accessToken));
+                new LoginResponse(accessToken, refreshToken.Token, refreshToken.Expires));
         }
     }
 }
