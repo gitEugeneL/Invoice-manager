@@ -8,21 +8,22 @@ namespace InvoiceApi.IntegrationTests.Features.Invoices;
 public class LockInvoiceTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = TestCase.CreateTestHttpClient(factory, "lockInvoiceEndpoint");
-
+    
     [Fact]
     public async Task LockInvoice_withValidId_ReturnsOkResult()
     {
         // arrange
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "email@test.com"));
-        var createResult = await SharedMethods.CreateInvoice(_client);
+        var invoice = await SharedMethods.CreateInvoice(_client);
+        await SharedMethods.CreateItem(invoice, _client);
         
         // act
-        var response = await _client.PatchAsync($"api/v1/invoice/lock/{createResult.InvoiceId}", null);
+        var response = await _client.PatchAsync($"api/v1/invoice/lock/{invoice.InvoiceId}", null);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var result = await TestCase.DeserializeResponse<Guid>(response);
-        result.Should().Be(createResult.InvoiceId);
+        result.Should().Be(invoice.InvoiceId);
     }
 
     [Fact]

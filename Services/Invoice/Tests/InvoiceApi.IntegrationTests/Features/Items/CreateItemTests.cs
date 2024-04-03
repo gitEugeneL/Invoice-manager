@@ -84,7 +84,8 @@ public class CreateItemTests(WebApplicationFactory<Program> factory) : IClassFix
        var invoice = await SharedMethods.CreateInvoice(_client);
        var model = new CreateItemCommand(
            invoice.InvoiceId, "Product1", 1, "Items", "Vat23", 10);
-       var r = await _client.PatchAsync($"api/v1/invoice/lock/{invoice.InvoiceId}", null);
+       await SharedMethods.CreateItem(invoice, _client);
+       await _client.PatchAsync($"api/v1/invoice/lock/{invoice.InvoiceId}", null);
        
        // act
        var response = await _client.PostAsync("api/v1/item", TestCase.CreateContext(model));

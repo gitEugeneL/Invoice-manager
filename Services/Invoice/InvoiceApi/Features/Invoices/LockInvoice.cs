@@ -79,7 +79,7 @@ public class LockInvoice : ICarterModule
                         SumGrossPrice = item.GrossPrice
                     })
                 }, ct);
-            
+
             return TypedResults.Ok(invoice.Id);
         }
     }

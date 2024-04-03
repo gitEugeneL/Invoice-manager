@@ -3,8 +3,8 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using InvoiceApi.Contracts.Invoices;
 using InvoiceApi.Data;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +42,9 @@ public static class TestCase
                         service.ServiceType == typeof(DbContextOptions<AppDbContext>))!);
                     services.AddDbContext<AppDbContext>(options =>
                         options.UseInMemoryDatabase(dbname));
+
+                    // masstransit in memory
+                    services.AddMassTransitTestHarness();
                 });
                 
             })
