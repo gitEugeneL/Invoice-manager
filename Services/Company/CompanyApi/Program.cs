@@ -76,6 +76,7 @@ builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
     busConfigurator.AddConsumer<GetCompanyConsumer>();
+    busConfigurator.AddConsumer<CompanyExistConsumer>();
     
     busConfigurator.UsingRabbitMq((context, configurator) =>
     {

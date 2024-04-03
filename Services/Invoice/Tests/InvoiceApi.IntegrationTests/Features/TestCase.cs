@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using InvoiceApi.Data;
+using InvoiceApi.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -45,6 +46,8 @@ public static class TestCase
 
                     // masstransit in memory
                     services.AddMassTransitTestHarness();
+                    // fake response
+                    services.AddTransient<ICompanyService, FakeCompanyService>();
                 });
                 
             })

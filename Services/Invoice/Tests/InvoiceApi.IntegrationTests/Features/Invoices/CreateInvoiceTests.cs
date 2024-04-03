@@ -25,14 +25,14 @@ public class CreateInvoiceTests(WebApplicationFactory<Program> factory) : IClass
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "email@test.com"));
         var model = new CreateInvoiceRequest(
             Guid.NewGuid(), Guid.NewGuid(), termsOfPayment, paymentType, status);
-
+        
         // act
         var response = await _client.PostAsync("api/v1/invoice", TestCase.CreateContext(model));
-        
+
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var result = await TestCase.DeserializeResponse<InvoiceResponse>(response);
         var date = DateTime.Now;
-        result.Number.Should().Be($"FV-1/{date.Month}/{date.Year}");
-    }
+        result.Number.Should().Be($"FV-1/{date.Month:MM}/{date.Year}");
+       }
 }

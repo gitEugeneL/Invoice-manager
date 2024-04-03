@@ -5,6 +5,7 @@ using Carter;
 using FluentValidation;
 using InvoiceApi.Data;
 using InvoiceApi.Helpers;
+using InvoiceApi.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 /*** FluentValidation files register ***/
 builder.Services

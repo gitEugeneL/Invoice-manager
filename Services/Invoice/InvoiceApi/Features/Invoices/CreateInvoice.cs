@@ -42,7 +42,7 @@ public class CreateInvoice : ICarterModule
         int TermsOfPayment,
         string PaymentType,
         string Status
-    ) : IRequest<Results<Created<InvoiceResponse>, ValidationProblem>>;
+    ) : IRequest<Results<Created<InvoiceResponse>, ValidationProblem, NotFound<string>>>;
     
     public sealed class Validator : AbstractValidator<Command>
     {
@@ -74,34 +74,41 @@ public class CreateInvoice : ICarterModule
     
     internal sealed class Handler(
         AppDbContext dbContext,
-        IValidator<Command> validator
-    ) : IRequestHandler<Command, Results<Created<InvoiceResponse>, ValidationProblem>>
+        IValidator<Command> validator,
+        ICompanyService companyService
+    ) : IRequestHandler<Command, Results<Created<InvoiceResponse>, ValidationProblem, NotFound<string>>>
     {
-        public async Task<Results<Created<InvoiceResponse>, ValidationProblem>> Handle(Command commnad, CancellationToken ct)
+        public async Task<Results<Created<InvoiceResponse>, ValidationProblem, NotFound<string>>> 
+            Handle(Command command, CancellationToken ct)
         {
-            var validationResult = await validator.ValidateAsync(commnad, ct);
+            var validationResult = await validator.ValidateAsync(command, ct);
             if (!validationResult.IsValid)
                 return TypedResults.ValidationProblem(validationResult.GetValidationProblems());
-
-            // todo check company id
+            
+            var buyerCompanyExists = await companyService.CompanyExists(command.BuyerCompanyId);
+            var sellerCompanyExists = await companyService.CompanyExists(command.SellerCompanyId);
+            
+            if (!buyerCompanyExists || !sellerCompanyExists)
+                return TypedResults.NotFound("Company doesn't exist");
             
             var date = DateTime.Now;
             
             var invoiceCount = await dbContext
                 .Invoices
-                .Where(i => i.OwnerId == commnad.CurrentUserId 
+                .AsNoTracking()
+                .Where(i => i.OwnerId == command.CurrentUserId 
                             && i.Created.Year == date.Year
-                            && i.Created.Month == date.Month )
+                            && i.Created.Month == date.Month)
                 .CountAsync(ct);
 
             var invoice = new Invoice
             {
-                OwnerId = commnad.CurrentUserId,
-                SellerCompanyId = commnad.SellerCompanyId,
-                BuyerCompanyId = commnad.BuyerCompanyId,
-                Number = $"FV-{++invoiceCount}/{date.Month}/{date.Year}",
-                PaymentType = Enum.Parse<Payment>(commnad.PaymentType),
-                Status = Enum.Parse<Status>(commnad.Status),
+                OwnerId = command.CurrentUserId,
+                SellerCompanyId = command.SellerCompanyId,
+                BuyerCompanyId = command.BuyerCompanyId,
+                Number = $"FV-{++invoiceCount}/{date.Month:MM}/{date.Year}",
+                PaymentType = Enum.Parse<Payment>(command.PaymentType),
+                Status = Enum.Parse<Status>(command.Status),
             };
             await dbContext.Invoices.AddAsync(invoice, ct);
             await dbContext.SaveChangesAsync(ct);
