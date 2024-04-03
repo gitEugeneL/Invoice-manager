@@ -8,7 +8,7 @@ public interface ICompanyService
     Task<bool> CompanyExists(Guid id);
 }
 
-internal class CompanyService(IRequestClient<GetCompanyRequest> client) : ICompanyService
+internal class CompanyService(IRequestClient<CompanyExistRequest> client) : ICompanyService
 {
     public async Task<bool> CompanyExists(Guid id)
     {
