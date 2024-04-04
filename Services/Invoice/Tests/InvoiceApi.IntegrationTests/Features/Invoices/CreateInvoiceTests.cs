@@ -33,6 +33,6 @@ public class CreateInvoiceTests(WebApplicationFactory<Program> factory) : IClass
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var result = await TestCase.DeserializeResponse<InvoiceResponse>(response);
         var date = DateTime.Now;
-        result.Number.Should().Be($"FV-1/{date.Month:MM}/{date.Year}");
+        result.Number.Should().Be($"FV-1-{date.Month}-{date.Year}");
        }
 }

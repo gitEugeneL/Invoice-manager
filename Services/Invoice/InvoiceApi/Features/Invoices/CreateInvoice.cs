@@ -106,7 +106,7 @@ public class CreateInvoice : ICarterModule
                 OwnerId = command.CurrentUserId,
                 SellerCompanyId = command.SellerCompanyId,
                 BuyerCompanyId = command.BuyerCompanyId,
-                Number = $"FV-{++invoiceCount}/{date.Month:MM}/{date.Year}",
+                Number = $"FV-{++invoiceCount}-{date.Month}-{date.Year}",
                 PaymentType = Enum.Parse<Payment>(command.PaymentType),
                 Status = Enum.Parse<Status>(command.Status),
             };

@@ -33,4 +33,8 @@
       <ProjectReference Include="..\..\Contracts\Contracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="sqlite-data.db" />
+    </ItemGroup>
+
 </Project>

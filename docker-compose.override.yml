@@ -57,9 +57,48 @@ services:
       - invoice.api
       - identity.api
       - rabbitmq
+  
+  #---------------------------------------------------------------------------  
+
+  minio:
+    container_name: minio
+    command: server --console-address ":9001" /data/
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    networks:
+      - proxybackend
+    volumes:
+      - ./.containers/minio-storage:/data
+
+  storage.api:
+    container_name: storage.api
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+      - "MinIOStorage__Endpoint=minio:9000"
+      - "MinIOStorage__AccessKey=user"
+      - "MinIOStorage__SecretKey=password"
+      - "MessageBroker__Host=amqp://invoice-manager-rabbitmq:5672"
+      - "MessageBroker__Username=user"
+      - "MessageBroker__Password=password"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    networks:
+      - proxybackend
+    depends_on:
+      - company.api
+      - invoice.api
+      - identity.api
+      - file-generator.api
+      - minio
 
 #---------------------------------------------------------------------------  
-      
+
   identity.api.database:
     container_name: identity.api.database
     environment:
@@ -123,7 +162,7 @@ services:
       - identity.api
     networks:
       - proxybackend
-    
+
 #---------------------------------------------------------------------------
 
   invoice.api.database:
@@ -163,6 +202,7 @@ services:
 #---------------------------------------------------------------------------
 
 volumes:
+  minio-storage:
   invoice-manager-rabbitmq:
   invoice.api.database:
   identity.api.database:

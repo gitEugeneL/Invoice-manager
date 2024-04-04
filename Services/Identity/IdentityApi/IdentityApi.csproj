@@ -28,4 +28,8 @@
       <Folder Include="Domain\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="sqlite-data.db" />
+    </ItemGroup>
+
 </Project>
