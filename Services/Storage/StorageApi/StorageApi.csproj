@@ -8,14 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Carter" Version="8.0.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.0" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
         <PackageReference Include="Minio" Version="6.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Features\" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
