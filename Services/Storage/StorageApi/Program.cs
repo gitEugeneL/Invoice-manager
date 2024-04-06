@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Minio;
 using StorageApi.Consumers;
 using StorageApi.Helpers;
+using StorageApi.Middleware;
 using StorageApi.Services;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -90,6 +91,9 @@ builder.Services.AddAuthorizationBuilder()
             .RequireClaim(ClaimTypes.Email)
             .RequireClaim(ClaimTypes.NameIdentifier));
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -98,5 +102,7 @@ app.UseSwaggerUI();
 app.MapCarter();
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler();
 
 app.Run();

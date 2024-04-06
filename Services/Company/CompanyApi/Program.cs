@@ -5,6 +5,7 @@ using Carter;
 using CompanyApi.Consumers;
 using CompanyApi.Data;
 using CompanyApi.Helpers;
+using CompanyApi.Middleware;
 using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -89,6 +90,9 @@ builder.Services.AddMassTransit(busConfigurator =>
     });
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 /*** Update develop database ***/
@@ -105,6 +109,8 @@ app.UseSwaggerUI();
 app.MapCarter();
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler();
 
 app.Run();
 

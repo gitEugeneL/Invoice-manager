@@ -2,6 +2,7 @@ using System.Reflection;
 using Carter;
 using FluentValidation;
 using IdentityApi.Data;
+using IdentityApi.Middleware;
 using IdentityApi.Security;
 using IdentityApi.Security.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,9 @@ builder.Services.AddMediatR(config =>
 /*** Carter configuration ***/
 builder.Services.AddCarter();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 /*** Update develop database ***/
@@ -47,6 +51,8 @@ app.UseSwaggerUI();
 app.MapCarter();
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler();
 
 app.Run();
 

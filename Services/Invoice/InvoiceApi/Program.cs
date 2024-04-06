@@ -5,6 +5,7 @@ using Carter;
 using FluentValidation;
 using InvoiceApi.Data;
 using InvoiceApi.Helpers;
+using InvoiceApi.Middleware;
 using InvoiceApi.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -87,6 +88,9 @@ builder.Services.AddAuthorizationBuilder()
             .RequireClaim(ClaimTypes.Email)
             .RequireClaim(ClaimTypes.NameIdentifier));
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 /*** Update develop database ***/
@@ -103,6 +107,8 @@ app.UseSwaggerUI();
 app.MapCarter();
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler();
 
 app.Run();
 
