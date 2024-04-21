@@ -84,6 +84,8 @@ services:
       - "MessageBroker__Host=amqp://invoice-manager-rabbitmq:5672"
       - "MessageBroker__Username=user"
       - "MessageBroker__Password=password"
+    ports:
+      - "8080:8080"
     deploy:
       restart_policy:
         condition: on-failure

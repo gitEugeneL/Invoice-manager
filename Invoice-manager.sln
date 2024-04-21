@@ -49,6 +49,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileGeneratorApi", "Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Services\Contracts\Contracts.csproj", "{D372780F-D8E3-4C36-BEA6-988F9E1C13B2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6688DBE3-D721-4B7A-82C2-3168480DC2F7}"
+	ProjectSection(SolutionItems) = preProject
+		Makefile = Makefile
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
+		README.md = README.md
+		microservices-diagram.png = microservices-diagram.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
