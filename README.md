@@ -2,7 +2,7 @@
 
 Invoice management system, microservice architecture.
 
-The services implement Vertical Slice Architecture, YARP reverse proxy, RabbitMq message broker, minimal api,
+The services implement Vertical Slice Architecture, YARP reverse proxy, RabbitMq message broker, request-response pattern, minimal api,
 PFD file generation, miniIO object storage, integration and unit tests.
 
 ## 👷 Frameworks, Libraries and Technologies
