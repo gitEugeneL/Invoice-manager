@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using IdentityApi.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,11 +17,11 @@ public class LoginTests(WebApplicationFactory<Program> factory) : IClassFixture<
     {
         // arrange
         var createModel = new RegisterRequest("test@email.com", "strongPwd!1");
-        var result = await _client.PostAsync("api/v1/auth/register", TestCase.CreateContext(createModel));
+        var result = await _client.PostAsJsonAsync("api/v1/auth/register", createModel);
         var loginModel = new LoginRequest(createModel.Email, createModel.Password);
         
         // act
-        var response = await _client.PostAsync("api/v1/auth/login", TestCase.CreateContext(loginModel));
+        var response = await _client.PostAsJsonAsync("api/v1/auth/login", createModel);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -35,7 +36,7 @@ public class LoginTests(WebApplicationFactory<Program> factory) : IClassFixture<
         var model = new LoginRequest(email, password);
         
         // act
-        var response = await _client.PostAsync("api/v1/auth/login", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/auth/login", model);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

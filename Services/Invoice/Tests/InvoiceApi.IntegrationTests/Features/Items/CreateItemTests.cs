@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using InvoiceApi.Contracts.Items;
 using InvoiceApi.Domain.Entities.Enums;
@@ -30,7 +31,7 @@ public class CreateItemTests(WebApplicationFactory<Program> factory) : IClassFix
         var model = new CreateItemCommand(invoice.InvoiceId, name, amount, unit, vat, netPrice);
 
         // act
-        var response = await _client.PostAsync("api/v1/item", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/item", model);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -53,7 +54,7 @@ public class CreateItemTests(WebApplicationFactory<Program> factory) : IClassFix
             Guid.NewGuid(), "Product1", 1, "Items", "Vat23", 10);
         
         // act
-        var response = await _client.PostAsync("api/v1/item", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/item", model);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -70,7 +71,7 @@ public class CreateItemTests(WebApplicationFactory<Program> factory) : IClassFix
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user2@test.com"));
 
         // act
-        var response = await _client.PostAsync("api/v1/item", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/item", model);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -88,7 +89,7 @@ public class CreateItemTests(WebApplicationFactory<Program> factory) : IClassFix
        await _client.PatchAsync($"api/v1/invoice/lock/{invoice.InvoiceId}", null);
        
        // act
-       var response = await _client.PostAsync("api/v1/item", TestCase.CreateContext(model));
+       var response = await _client.PostAsJsonAsync("api/v1/item", model);
        
        // assert
        response.StatusCode.Should().Be(HttpStatusCode.NotFound);

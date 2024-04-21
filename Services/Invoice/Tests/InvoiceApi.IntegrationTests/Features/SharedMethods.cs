@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using InvoiceApi.Contracts.Invoices;
 using InvoiceApi.Contracts.Items;
 
@@ -9,7 +10,7 @@ public static class SharedMethods
     {
         var model = new CreateInvoiceRequest(
             Guid.NewGuid(), Guid.NewGuid(), 3, "Cash", "Unpaid");
-        var response = await client.PostAsync("api/v1/invoice", TestCase.CreateContext(model));
+        var response = await client.PostAsJsonAsync("api/v1/invoice", model);
         return await TestCase.DeserializeResponse<InvoiceResponse>(response);
     }
     
@@ -17,7 +18,7 @@ public static class SharedMethods
     {
         var model = new CreateItemCommand(
             invoice.InvoiceId, "Wall painting", 30, "Hours", "Vat23", 1000);
-        var response = await client.PostAsync("api/v1/item", TestCase.CreateContext(model));
+        var response = await client.PostAsJsonAsync("api/v1/item", model);
         return await TestCase.DeserializeResponse<ItemResponse>(response);
     }
 }

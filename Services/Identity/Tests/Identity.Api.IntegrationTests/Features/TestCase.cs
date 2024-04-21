@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using IdentityApi.Contracts;
 using IdentityApi.Data;
@@ -37,17 +38,11 @@ public static class TestCase
     public static async Task<LoginResponse> Login(HttpClient client, string email, string password)
     {
         var model = new LoginRequest(email, password);
-        var response = await client.PostAsync("api/v1/auth/login", CreateContext(model));
+        var response = await client.PostAsJsonAsync("api/v1/auth/login", model);
         var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync())!;
 
         client.DefaultRequestHeaders.Authorization = 
             new AuthenticationHeaderValue("Bearer", loginResponse.AccessToken);
         return loginResponse;
-    }
-    
-    public static StringContent CreateContext(object o)
-    {
-        return new StringContent(
-            JsonConvert.SerializeObject(o), Encoding.UTF8, "application/json");
     }
 }

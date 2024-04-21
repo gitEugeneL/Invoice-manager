@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using InvoiceApi.Contracts.Invoices;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -27,7 +28,7 @@ public class CreateInvoiceTests(WebApplicationFactory<Program> factory) : IClass
             Guid.NewGuid(), Guid.NewGuid(), termsOfPayment, paymentType, status);
         
         // act
-        var response = await _client.PostAsync("api/v1/invoice", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/invoice", model);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);

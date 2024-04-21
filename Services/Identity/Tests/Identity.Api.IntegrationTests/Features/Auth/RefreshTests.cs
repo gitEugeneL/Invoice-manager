@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Security.Cryptography;
 using FluentAssertions;
 using IdentityApi.Contracts;
@@ -16,12 +17,12 @@ public class RefreshTests(WebApplicationFactory<Program> factory) : IClassFixtur
     {
         // arrange
         var createModel = new RegisterRequest("test@email.com", "strongPwd!1");
-        await _client.PostAsync("api/v1/auth/register", TestCase.CreateContext(createModel));
+        await _client.PostAsJsonAsync("api/v1/auth/register", createModel);
         var loginResponse = await TestCase.Login(_client, createModel.Email, createModel.Password);
         var refreshModel = new RefreshRequest(loginResponse.RefreshToken);
 
         // act
-        var response = await _client.PostAsync("api/v1/auth/refresh", TestCase.CreateContext(refreshModel));
+        var response = await _client.PostAsJsonAsync("api/v1/auth/refresh", refreshModel);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -34,7 +35,7 @@ public class RefreshTests(WebApplicationFactory<Program> factory) : IClassFixtur
         var model = new RefreshRequest(Convert.ToBase64String(RandomNumberGenerator.GetBytes(256)));
 
         // act
-        var response = await _client.PostAsync("api/v1/auth/refresh", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/auth/refresh", model);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

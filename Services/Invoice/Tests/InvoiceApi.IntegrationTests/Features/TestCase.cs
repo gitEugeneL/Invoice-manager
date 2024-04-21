@@ -87,10 +87,4 @@ public static class TestCase
         var jsonResponse = await response.Content.ReadAsStringAsync(); 
         return JsonConvert.DeserializeObject<T>(jsonResponse)!;
     }
-    
-    public static StringContent CreateContext(object o)
-    {
-        return new StringContent(
-            JsonConvert.SerializeObject(o), Encoding.UTF8, "application/json");
-    }
 }

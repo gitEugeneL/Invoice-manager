@@ -8,7 +8,7 @@ public static class SharedMethods
     {
         var model = new CreateCompanyRequest(
             "Company", "5555555555", "Radom", "Warszawska", "123", "02-495");
-        var response = await client.PostAsync("api/v1/company", TestCase.CreateContext(model));
+        var response = await client.PostAsJsonAsync("api/v1/company", model);
         return await TestCase.DeserializeResponse<CompanyResponse>(response);
     }
 }

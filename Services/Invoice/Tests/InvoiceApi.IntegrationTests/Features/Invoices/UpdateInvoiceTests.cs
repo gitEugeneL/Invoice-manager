@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using InvoiceApi.Contracts.Invoices;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -19,7 +20,7 @@ public class UpdateInvoiceTests(WebApplicationFactory<Program> factory) : IClass
         var updateModel = new UpdateInvoiceCommand(createResult.InvoiceId, "Paid");
         
         // act
-        var response = await _client.PutAsync("api/v1/invoice", TestCase.CreateContext(updateModel));
+        var response = await _client.PutAsJsonAsync("api/v1/invoice", updateModel);
         
         // asserts
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -36,7 +37,7 @@ public class UpdateInvoiceTests(WebApplicationFactory<Program> factory) : IClass
         var updateModel = new UpdateInvoiceCommand(Guid.NewGuid(), "Paid");
         
         // act
-        var response = await _client.PutAsync("api/v1/invoice", TestCase.CreateContext(updateModel));
+        var response = await _client.PutAsJsonAsync("api/v1/invoice", updateModel);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -52,7 +53,7 @@ public class UpdateInvoiceTests(WebApplicationFactory<Program> factory) : IClass
         TestCase.IncludeTokenInRequest(_client, TestCase.CreateFakeToken(Guid.NewGuid(), "user2@test.com"));
 
         // act
-        var response = await _client.PutAsync("api/v1/invoice", TestCase.CreateContext(updateModel));
+        var response = await _client.PutAsJsonAsync("api/v1/invoice", updateModel);
         
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

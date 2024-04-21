@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using IdentityApi.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -19,7 +20,7 @@ public class RegisterTests(WebApplicationFactory<Program> factory) : IClassFixtu
          var model = new RegisterRequest(email, password);
 
          // act
-         var response = await _client.PostAsync("api/v1/auth/register", TestCase.CreateContext(model));
+         var response = await _client.PostAsJsonAsync("api/v1/auth/register", model);
          
          // assert
          response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -34,7 +35,7 @@ public class RegisterTests(WebApplicationFactory<Program> factory) : IClassFixtu
          // act
          var response  = new HttpResponseMessage();
          for (var i = 0; i < 2; i++)
-             response = await _client.PostAsync("api/v1/auth/register", TestCase.CreateContext(model));
+             response = await _client.PostAsJsonAsync("api/v1/auth/register", model);
          
          // assert
          response.StatusCode.Should().Be(HttpStatusCode.Conflict);

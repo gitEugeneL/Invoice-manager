@@ -27,7 +27,7 @@ public class CreateCompanyTests(WebApplicationFactory<Program> factory) : IClass
         var model = new CreateCompanyRequest(name, taxNumber, city, street, houseNumber, postalCode);
         
         // act
-        var response = await _client.PostAsync("api/v1/company", TestCase.CreateContext(model));
+        var response = await _client.PostAsJsonAsync("api/v1/company", model);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
