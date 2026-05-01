@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   
   gateway.api:
@@ -34,8 +32,10 @@ services:
     networks:
       - proxybackend
     volumes:
-      - ./.containers/invoice-manager-rabbitmq/data/:/var/lib/rabbitmq:rw
-      - ./.containers/invoice-manager-rabbitmq/log/:/var/log/rabbitmq:rw
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+#      - ./.containers/invoice-manager-rabbitmq/data/:/var/lib/rabbitmq:rw
+#      - ./.containers/invoice-manager-rabbitmq/log/:/var/log/rabbitmq:rw
   
 #---------------------------------------------------------------------------  
     
@@ -72,7 +72,8 @@ services:
     networks:
       - proxybackend
     volumes:
-      - ./.containers/minio-storage:/data
+      - minio-storage:/data
+#      - ./.containers/minio-storage:/data
 
   storage.api:
     container_name: storage.api
@@ -110,7 +111,7 @@ services:
     ports: 
       - "5432:5432"
     volumes: 
-      - ./.containers/identity.api.database:/var/lib/postgresql/data:rw
+      - identity.api.database:/var/lib/postgresql
     networks:
       - proxybackend
 
@@ -141,7 +142,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./.containers/company.api.database:/var/lib/postgresql/data:rw
+      - company.api.database:/var/lib/postgresql
     networks:
       - proxybackend
 
@@ -176,7 +177,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - ./.containers/invoice.api.database:/var/lib/postgresql/data:rw
+      - invoice.api.database:/var/lib/postgresql
     networks:
       - proxybackend
 
@@ -204,6 +205,8 @@ services:
 #---------------------------------------------------------------------------
 
 volumes:
+  rabbitmq-data:
+  rabbitmq-log:
   minio-storage:
   invoice-manager-rabbitmq:
   invoice.api.database:

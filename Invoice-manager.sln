@@ -56,6 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		README.md = README.md
 		microservices-diagram.png = microservices-diagram.png
+		.github\workflows\donet.yml = .github\workflows\donet.yml
 	EndProjectSection
 EndProject
 Global
